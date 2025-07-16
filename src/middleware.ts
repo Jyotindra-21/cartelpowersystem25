@@ -7,12 +7,21 @@ export const config = {
 };
 
 export async function middleware(request: NextRequest) {
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-pathname", request.nextUrl.pathname);
   const token = await getToken({ req: request });
   const url = request.nextUrl;
 
-  // Redirect to dashboard if the user is already authenticated
+  // Redirect authenticated users away from auth pages
+  if (token) {
+    if (
+      url.pathname.startsWith("/sign-in") ||
+      url.pathname.startsWith("/sign-up") ||
+      url.pathname.startsWith("/verify")
+    ) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
+  // Protect admin routes
   if (url.pathname.startsWith("/admin")) {
     if (!token) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
@@ -20,14 +29,6 @@ export async function middleware(request: NextRequest) {
     if (!token.isAdmin) {
       return NextResponse.redirect(new URL("/", request.url));
     }
-  }
-  if (
-    token &&
-    (url.pathname.startsWith("/sign-in") ||
-      url.pathname.startsWith("/sign-up") ||
-      url.pathname.startsWith("/verify"))
-  ) {
-    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();

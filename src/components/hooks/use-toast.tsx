@@ -15,8 +15,8 @@ export function toast({ title, description, action, variant }: Toast) {
   return sonnerToast.custom((t) => (
     <div className={cn(
       "group relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg",
-      variant === "destructive" 
-        ? "border-destructive bg-destructive text-destructive-foreground" 
+      variant === "destructive"
+        ? "border-destructive bg-destructive text-destructive-foreground"
         : "border bg-background text-foreground"
     )}>
       <div className="grid gap-1">

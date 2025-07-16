@@ -31,11 +31,11 @@ export interface Pagination {
   hasPrevPage: boolean;
 }
 
-export interface IApiResponse<T, F> {
+export interface IApiResponse<T> {
   success: boolean;
   data?: T;
   error?: string;
   message?: string;
   pagination?: Pagination;
-  filters?: F;
+  filters?: ProductFilterParams;
 }

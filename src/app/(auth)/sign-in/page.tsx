@@ -70,8 +70,8 @@ export default function SignInForm() {
         });
 
         setTimeout(() => {
-          router.replace(user?.isAdmin ? '/admin' : '/');
-        }, 1000);
+           window.location.reload();
+        }, 100);
       }
     } finally {
       setIsLoading(false);
