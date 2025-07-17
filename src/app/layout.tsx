@@ -9,7 +9,10 @@ import AuthProvider from "@/components/providers/AuthProvider";
 import ImagekitProvider from "@/components/providers/ImagekitProvider";
 
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+})
 
 export const metadata: Metadata = {
   title: "Cartel | Make Believe",
@@ -26,7 +29,7 @@ export default function RootLayout({
       <AuthProvider>
         <body
           suppressHydrationWarning
-          className={inter.className}
+          className={`${inter.variable}`}
         >
           <Toaster />
           <NextTopLoader color="#fad000" showSpinner={false} />
