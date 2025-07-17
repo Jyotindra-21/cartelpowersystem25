@@ -19,7 +19,6 @@ export async function GET(
     const { param } = await params;
     let product: IProductDocument | null = null;
     // const param = await Promise.resolve(param);
-    ("param", param);
 
     if (isMongoId(param)) {
       product = await ProductModel.findById(param);

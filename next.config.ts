@@ -13,19 +13,19 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60, // Recommended minimum value
   },
   output: "standalone",
-  // Remove experimental.optimizeCss completely
   eslint: {
     ignoreDuringBuilds: true,
   },
   // Add these new configurations:
-  webpack: (config) => {
-    // Exclude lightningcss from being processed
-    config.externals = config.externals || {};
-    config.externals['lightningcss'] = 'lightningcss';
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.externals = {
+        ...config.externals,
+        lightningcss: 'lightningcss'
+      };
+    }
     return config;
   },
-  // Enable SWC minification (alternative to lightningcss)
-  swcMinify: true,
 };
 
 export default nextConfig;

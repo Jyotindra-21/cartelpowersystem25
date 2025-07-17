@@ -1,4 +1,3 @@
-// "use client"
 import React from 'react'
 import HeroPage from './_components/sections/HeroPage'
 import Products from './_components/sections/Products'
