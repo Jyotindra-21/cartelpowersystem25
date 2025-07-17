@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build --no-lint",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "node -e \"try { require('lightningcss-node').install() } catch (e) {}\""
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
