@@ -9,16 +9,23 @@ const nextConfig: NextConfig = {
         port: "",
       },
     ],
-    unoptimized: false, // Keep as false if you want optimized images
-    minimumCacheTTL: 0, // Set to 0 to disable cache
+    unoptimized: false,
+    minimumCacheTTL: 60, // Recommended minimum value
   },
   output: "standalone",
-  experimental: {
-    optimizeCss: process.env.VERCEL ? false : true, // Disable on Vercel
-  },
+  // Remove experimental.optimizeCss completely
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Add these new configurations:
+  webpack: (config) => {
+    // Exclude lightningcss from being processed
+    config.externals = config.externals || {};
+    config.externals['lightningcss'] = 'lightningcss';
+    return config;
+  },
+  // Enable SWC minification (alternative to lightningcss)
+  swcMinify: true,
 };
 
 export default nextConfig;

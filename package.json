@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "postinstall": "node -e \"try { require('lightningcss-node').install() } catch (e) {}\"",
     "build": "next build --no-lint",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "node -e \"try { require('lightningcss-node').install() } catch (e) {}\""
+    "lint": "next lint"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

@@ -12,6 +12,7 @@ import ImagekitProvider from "@/components/providers/ImagekitProvider";
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  preload: false 
 })
 
 export const metadata: Metadata = {
