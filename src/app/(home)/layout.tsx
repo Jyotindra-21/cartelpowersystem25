@@ -1,12 +1,12 @@
+// "use client"
+// import { useLayoutData } from "../_providers/LayoutDataProvider";
 import Footer from "./_components/footer";
 import { Navbar } from "./_components/navbar";
-
-export default async function HomeLayout({
+export default function HomeLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-
 
     return (
         <div className="flex flex-col min-h-screen">

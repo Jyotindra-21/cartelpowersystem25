@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-     "postinstall": "node -e \"try { require('lightningcss-node').install() } catch { console.log('LightningCSS install skipped') }\"",
+    "postinstall": "node -e \"try { require('lightningcss-node').install() } catch { console.log('LightningCSS install skipped') }\"",
     "build": "next build --no-lint",
     "start": "next start",
     "lint": "next lint"

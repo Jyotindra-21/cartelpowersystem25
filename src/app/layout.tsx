@@ -8,11 +8,10 @@ import NextTopLoader from 'nextjs-toploader';
 import AuthProvider from "@/components/providers/AuthProvider";
 import ImagekitProvider from "@/components/providers/ImagekitProvider";
 
-
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
-  preload: false 
+  preload: false
 })
 
 export const metadata: Metadata = {
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
   description: "cartel power system  automatic rescue device Manufacturing Company.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

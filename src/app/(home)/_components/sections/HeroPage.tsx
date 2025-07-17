@@ -41,7 +41,7 @@ const HeroPage = ({ heroSection, banners }: HeroPageProps) => {
                 )}
             </div>
             {/* Main grid container with visible lines */}
-            <div className='grid md:grid-cols-2 w-full max-w-[1200px] md:m-auto relative z-10 py-12'>
+            <div className='grid grid-cols-1 md:grid-cols-2 w-full max-w-[1200px] mx-auto relative z-10 py-12 md:py-20 gap-8 md:gap-12'>
                 {/* Left Column with right border */}
                 <div className="relative flex m-auto">
                     <div className='flex flex-col justify-center z-10 gap-6 w-full'>
@@ -90,8 +90,8 @@ const HeroPage = ({ heroSection, banners }: HeroPageProps) => {
                 </div>
 
                 {/* Right Column with left border indicator */}
-                <div className='relative m-auto'>
-                    <div className="relative h-full min-h-[400px]">
+                <div className='relative order-1 md:order-2'>
+                    <div className="relative h-full min-h-[300px] sm:min-h-[400px]">
                         <div className="absolute -inset-8 bg-gradient-to-br from-secondary/10 to-primary/20 rounded-3xl blur-xl opacity-60 z-0"></div>
                         {banners && banners?.length > 0 ? <Carousel
                             className="w-full h-full flex justify-center items-center relative z-20"

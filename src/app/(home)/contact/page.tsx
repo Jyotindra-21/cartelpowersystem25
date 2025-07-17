@@ -20,7 +20,8 @@ import { Bolt, Mail, Phone, MapPin, Send, Check, ChevronRight } from 'lucide-rea
 import { motion } from "framer-motion"
 import Link from 'next/link';
 import { useToast } from '@/components/hooks/use-toast';
-
+// export const dynamic = 'force-dynamic'; // Force dynamic rendering
+// export const revalidate = 0;
 const formSchema = z.object({
   firstName: z.string().min(1, {
     message: "First Name is required.",
@@ -44,6 +45,7 @@ const formSchema = z.object({
 });
 
 const Contact = () => {
+
   const fadeIn = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.8 } }
@@ -72,7 +74,7 @@ const Contact = () => {
   const onsubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       // await axios.post(`/api/courses/${courseId}/chapters`, values);
-      console.log("values:" , values);
+      console.log("values:", values);
       toast({ description: "Message Sent Successfully!", action: "success" })
       router.refresh()
       form.reset()

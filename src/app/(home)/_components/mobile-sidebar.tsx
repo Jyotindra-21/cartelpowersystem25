@@ -11,17 +11,30 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { IWebsiteInfo } from "@/schemas/settingsSchema";
 import { ISvgLogo } from "@/schemas/logoSchema";
+import { IApiResponse } from "@/types/ApiResponse";
+import { fetchWebsiteInfo } from "@/services/settings.services";
+import { getActiveSvgLogo } from "@/services/svglogo.services";
 
-interface IMobileSidebarProps {
-    websiteInfo?: IWebsiteInfo
-    svgLogo?: ISvgLogo
-}
-
-export const MobileSidebar = ({ websiteInfo, svgLogo }: IMobileSidebarProps) => {
+export const MobileSidebar = () => {
     const [sheetOpen, setSheetOpen] = useState<boolean>(false);
     const [swipeProgress, setSwipeProgress] = useState(0);
     const touchStartX = useRef<number | null>(null);
     const isSwiping = useRef<boolean>(false);
+
+    const [websiteInfo, setWebsiteInfo] = useState<IWebsiteInfo | undefined>(undefined)
+    const [svgLogo, setSvgLogo] = useState<ISvgLogo | undefined>(undefined)
+
+
+    useEffect(() => {
+        const fetchdata = async () => {
+            const { data: websiteInfo }: IApiResponse<IWebsiteInfo> = await fetchWebsiteInfo();
+            const svgLogo = await getActiveSvgLogo() || undefined;
+            setWebsiteInfo(websiteInfo)
+            setSvgLogo(svgLogo)
+        }
+        fetchdata()
+    }, [])
+
     useEffect(() => {
         const handleTouchStart = (e: TouchEvent) => {
             // Only start tracking from left edge (20px)
