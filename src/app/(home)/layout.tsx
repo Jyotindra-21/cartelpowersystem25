@@ -1,5 +1,4 @@
-// "use client"
-// import { useLayoutData } from "../_providers/LayoutDataProvider";
+"use client"
 import Footer from "./_components/footer";
 import { Navbar } from "./_components/navbar";
 export default function HomeLayout({

@@ -19,7 +19,6 @@ import { getActiveSvgLogo } from "@/services/svglogo.services";
 import { fetchWebsiteInfo } from "@/services/settings.services";
 import { useEffect, useState } from "react";
 import { ISvgLogo } from "@/schemas/logoSchema";
-// import { useLayoutData } from '@/app/_providers/LayoutDataProvider';
 
 export const NavbarRoutes = () => {
     const [websiteInfo, setWebsiteInfo] = useState<IWebsiteInfo | undefined>(undefined)
