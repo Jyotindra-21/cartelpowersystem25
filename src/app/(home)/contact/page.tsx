@@ -72,10 +72,12 @@ const Contact = () => {
   const onsubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       // await axios.post(`/api/courses/${courseId}/chapters`, values);
+      console.log("values:" , values);
       toast({ description: "Message Sent Successfully!", action: "success" })
       router.refresh()
       form.reset()
     } catch (error) {
+      console.error(`ERROR : ${error}`)
       toast({ description: "Something Went wrong!", action: "Error", variant: "destructive" })
 
     }

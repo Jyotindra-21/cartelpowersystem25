@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { Bolt, Shield, Award, Globe, Users, Briefcase, ArrowRight, ChevronRight } from 'lucide-react'
+import { Bolt, Award, Briefcase, ChevronRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'

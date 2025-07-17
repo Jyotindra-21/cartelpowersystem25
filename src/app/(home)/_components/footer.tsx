@@ -3,7 +3,6 @@ import { Facebook, Instagram, Linkedin, Twitter, Zap, Contact, Microchip } from 
 import Link from 'next/link'
 import React from 'react'
 import { motion } from "framer-motion"
-import Logo from './logo'
 
 const Footer = () => {
     return (

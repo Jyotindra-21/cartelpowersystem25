@@ -4,7 +4,7 @@ import { z } from "zod";
 export const WebsiteSchema = z.object({
   logo: z.string().optional(),
   svg: z.string().optional(),
-  isSvg: z.boolean().default(true),
+  isSvg: z.boolean().default(true).optional(),
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   metaData: z.string().optional(),
@@ -40,7 +40,7 @@ export const OurStorySectionSchema = z.object({
   storyTeller: z.string().min(1, "Story teller is required"),
   position: z.string().min(1, "Position is required"),
   quote: z.string().min(1, "Quote is required"),
-  isMissionView: z.boolean().default(false),
+  isMissionView: z.boolean().default(false).optional(),
   missionDescription: z.string().optional(),
   companyStats: z.array(CompanyStatsScheme),
 });
@@ -53,7 +53,7 @@ export const CitySchema = z.object({
 
 export const WeWorkAcross = z.object({
   workAcross: z.string().min(1, "Work Across is required"),
-  isWorkAcrossView: z.boolean().default(true),
+  isWorkAcrossView: z.boolean().default(true).optional(),
   workAcrossCities: z.array(CitySchema).optional(),
 });
 
@@ -61,7 +61,7 @@ export const SocialMediaSchema = z.object({
   icon: z.string().optional(),
   svg: z.string().optional(),
   url: z.string().optional(),
-  isSvg: z.boolean().default(false),
+  isSvg: z.boolean().default(false).optional(),
 });
 export const QuickLikSchema = z.object({
   title: z.string().min(1, "Title is required"),

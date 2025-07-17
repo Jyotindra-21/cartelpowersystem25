@@ -13,7 +13,7 @@ export const revalidate = 0; //
 
 const ProductPage = async () => {
     headers();
-    const { data: products }: IApiResponse<IProduct[]> = await fetchProducts({ isActive: true, getAll: true });
+    const { data: products }: IApiResponse<IProduct[]> = await fetchProducts<IProduct[]>({ isActive: true, getAll: true });
     // if (loading) {
     //     return (
     //         <section className=' max-w-[1200px] px-2 py-5 m-auto '>

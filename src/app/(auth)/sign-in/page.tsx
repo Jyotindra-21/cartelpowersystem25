@@ -13,19 +13,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, Eye, EyeOff, Fingerprint } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/components/hooks/use-toast';
 import { signInSchema } from '@/schemas/signInSchema';
 // import LogoReveal from '@/components/3d/LogoRevel';
-
 export default function SignInForm() {
-  const router = useRouter();
-  const { data: session } = useSession();
-  const user = session?.user;
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [shake, setShake] = useState(false);
@@ -70,7 +65,7 @@ export default function SignInForm() {
         });
 
         setTimeout(() => {
-           window.location.reload();
+          window.location.reload();
         }, 100);
       }
     } finally {

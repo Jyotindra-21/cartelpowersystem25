@@ -1,4 +1,3 @@
-
 import dbConnect from "@/lib/dbConnect";
 import { IProductDocument, ProductModel } from "@/models/productModel";
 import { ProductSections } from "@/schemas/productsSchema";
@@ -12,18 +11,21 @@ function isMongoId(param: string): boolean {
 // GET single product by ID or slug
 export async function GET(
   request: Request,
-  { params }: { params: { param: string } }
+  { params }: { params: Promise<{ param: string }> }
 ) {
   await dbConnect();
 
   try {
+    const { param } = await params;
     let product: IProductDocument | null = null;
+    // const param = await Promise.resolve(param);
+    console.log("param", param);
 
-    if (isMongoId(params.param)) {
-      product = await ProductModel.findById(params.param);
+    if (isMongoId(param)) {
+      product = await ProductModel.findById(param);
     } else {
       product = await ProductModel.findOne({
-        "basicInfo.slug": params.param,
+        "basicInfo.slug": param,
       });
     }
 
@@ -46,7 +48,7 @@ export async function GET(
 // UPDATE a product by ID or slug
 export async function PUT(
   request: Request,
-  { params }: { params: { param: string } }
+  { params }: { params: Promise<{ param: string }> }
 ) {
   await dbConnect();
 
@@ -54,11 +56,11 @@ export async function PUT(
     const body = await request.json();
 
     let product: IProductDocument | null = null;
-
-    if (isMongoId(params.param)) {
-      product = await ProductModel.findById(params.param);
+    const { param } = await params;
+    if (isMongoId(param)) {
+      product = await ProductModel.findById(param);
     } else {
-      product = await ProductModel.findOne({ "basicInfo.slug": params.param });
+      product = await ProductModel.findOne({ "basicInfo.slug": param });
     }
 
     if (!product) {
@@ -127,20 +129,21 @@ export async function PUT(
 // DELETE a product by ID or slug
 export async function DELETE(
   request: Request,
-  { params }: { params: { param: string } }
+ { params }: { params: Promise<{ param: string }> }
 ) {
   await dbConnect();
 
   try {
     let deletedProduct;
+    const { param } = await params;
 
-    if (isMongoId(params.param)) {
+    if (isMongoId(param)) {
       deletedProduct = await ProductModel.findByIdAndDelete(
-        params.param
+        param
       ).lean();
     } else {
       deletedProduct = await ProductModel.findOneAndDelete({
-        "basicInfo.slug": params.param,
+        "basicInfo.slug": param,
       }).lean();
     }
 

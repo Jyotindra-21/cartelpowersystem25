@@ -1,6 +1,5 @@
 "use client"
 import React from 'react'
-import { Bolt, Users, Globe, Award, } from 'lucide-react'
 import Title from '../title'
 import { IOurStorySection } from '@/schemas/settingsSchema'
 import { motion } from "framer-motion"

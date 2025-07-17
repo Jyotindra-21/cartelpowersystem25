@@ -15,17 +15,17 @@ export const dynamic = 'force-dynamic'; // Force dynamic rendering
 export const revalidate = 0; // 
 
 const Page = async () => {
-    const { data: Settings }: IApiResponse<ISettings[]> = await fetchSettings();
-    const { data: Banner }: IApiResponse<IProduct[]> = await fetchProducts({ isBanner: true, isActive: true, getAll: true });
-    const { data: products }: IApiResponse<IProduct[]> = await fetchProducts({ isHighlighted: true, isActive: true, getAll: true });
+    const { data: Settings }: IApiResponse<ISettings> = await fetchSettings();
+    const { data: Banner }: IApiResponse<IProduct[]> = await fetchProducts<IProduct[]>({ isBanner: true, isActive: true, getAll: true });
+    const { data: products }: IApiResponse<IProduct[]> = await fetchProducts<IProduct[]>({ isHighlighted: true, isActive: true, getAll: true });
     return (
         <>
             <div className='relative overflow-clip'>
-                <HeroPage heroSection={Settings?.[0]?.heroSection} banners={Banner} />
+                <HeroPage heroSection={Settings?.heroSection} banners={Banner} />
                 <Products highlightedProducts={products} />
                 <ScrollLine />
-                <OurStoryPage ourStory={Settings?.[0]?.ourStorySection} />
-                <WeWork weWorkAcross={Settings?.[0]?.weWorkAcross} />
+                <OurStoryPage ourStory={Settings?.ourStorySection} />
+                <WeWork weWorkAcross={Settings?.weWorkAcross} />
             </div>
         </>
     )

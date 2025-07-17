@@ -2,7 +2,7 @@
 // import { CustomDialog } from '@/components/modals/CustomDialog';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
-import { Bolt, Shield, HardHat, Download, Play, Check, Phone, Share2Icon, HeartIcon } from 'lucide-react';
+import { Bolt, Shield, HardHat, Download,  Check, Phone, Share2Icon, HeartIcon } from 'lucide-react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';

@@ -28,7 +28,7 @@ export const svgLogoSchema = z.object({
       .optional(),
     source: z.string().optional(),
   }),
-  isActive: z.boolean().default(true),
+  isActive: z.boolean().default(true).optional(),
 });
 
 export type ISvgLogo = z.infer<typeof svgLogoSchema>;

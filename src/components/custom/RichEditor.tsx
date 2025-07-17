@@ -22,6 +22,7 @@ import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
 import Placeholder from '@tiptap/extension-placeholder'
+import { useState, useRef, useEffect } from 'react'
 import {
     FaBold,
     FaItalic,
@@ -59,6 +60,10 @@ interface RichEditorProps {
 }
 
 export default function RichEditor({ content, onChange, placeholder }: RichEditorProps) {
+    const [isCodeDialogOpen, setIsCodeDialogOpen] = useState(false)
+    const [codeContent, setCodeContent] = useState('')
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
+
     const editor = useEditor({
         extensions: [
             StarterKit.configure({
@@ -122,19 +127,98 @@ export default function RichEditor({ content, onChange, placeholder }: RichEdito
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML())
         },
+        immediatelyRender: false,
     })
+
+    const showCodeDialog = () => {
+        if (editor) {
+            setCodeContent(editor.getHTML())
+            setIsCodeDialogOpen(true)
+        }
+    }
+
+    const updateEditorContent = () => {
+        if (editor && textareaRef.current) {
+            const newContent = textareaRef.current.value
+            editor.commands.setContent(newContent)
+            setIsCodeDialogOpen(false)
+            onChange(newContent)
+        }
+    }
+
+    useEffect(() => {
+        if (isCodeDialogOpen && textareaRef.current) {
+            textareaRef.current.focus()
+            textareaRef.current.select()
+        }
+    }, [isCodeDialogOpen])
 
     if (!editor) return <div className="p-4 border rounded-lg">Loading editor...</div>
 
     return (
         <div className="border rounded-lg overflow-hidden">
-            <MenuBar editor={editor} />
+            <MenuBar editor={editor} onShowCodeDialog={showCodeDialog} />
             <EditorContent editor={editor} />
+            
+            {/* Code Dialog */}
+            {isCodeDialogOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg p-6 w-full max-w-3xl max-h-[80vh] flex flex-col">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-bold">Edit HTML Code</h3>
+                            <button 
+                                onClick={() => setIsCodeDialogOpen(false)}
+                                className="text-gray-500 hover:text-gray-700 text-2xl"
+                                aria-label="Close dialog"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        <div className="flex-1 overflow-auto mb-4">
+                            <textarea
+                                ref={textareaRef}
+                                value={codeContent}
+                                onChange={(e) => setCodeContent(e.target.value)}
+                                className="w-full h-full p-4 border rounded-md font-mono text-sm"
+                                style={{ minHeight: '300px' }}
+                            />
+                        </div>
+                        <div className="mt-4 flex justify-end gap-2">
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(codeContent)
+                                    // You could add a toast notification here
+                                }}
+                                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                            >
+                                Copy Code
+                            </button>
+                            <button
+                                onClick={() => setIsCodeDialogOpen(false)}
+                                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={updateEditorContent}
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            >
+                                Update
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
 
-function MenuBar({ editor }: { editor: any }) {
+interface MenuBarProps {
+    editor: any
+    onShowCodeDialog: () => void
+}
+
+function MenuBar({ editor, onShowCodeDialog }: MenuBarProps) {
     const addImage = () => {
         const url = window.prompt('Enter the URL of the image:')
         if (url) editor.chain().focus().setImage({ src: url }).run()
@@ -192,6 +276,8 @@ function MenuBar({ editor }: { editor: any }) {
                 <FaRedo />
             </button>
 
+            <div className="h-6 w-px bg-gray-300 mx-1"></div>
+
             {/* Text Formatting */}
             <button
                 type="button"
@@ -227,9 +313,9 @@ function MenuBar({ editor }: { editor: any }) {
             </button>
             <button
                 type="button"
-                onClick={() => editor.chain().focus().toggleCode().run()}
+                onClick={onShowCodeDialog}
                 className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('code') ? 'bg-gray-200' : ''}`}
-                title="Inline code"
+                title="Edit HTML Code"
             >
                 <FaCode />
             </button>
@@ -258,6 +344,8 @@ function MenuBar({ editor }: { editor: any }) {
                 <FaSuperscript />
             </button>
 
+            <div className="h-6 w-px bg-gray-300 mx-1"></div>
+
             {/* Headings */}
             <select
                 onChange={(e) => {
@@ -268,7 +356,7 @@ function MenuBar({ editor }: { editor: any }) {
                         editor.chain().focus().toggleHeading({ level: Number(value) }).run()
                     }
                 }}
-                className="p-2 rounded hover:bg-gray-200 border border-gray-300"
+                className="p-2 rounded hover:bg-gray-200 border border-gray-300 text-sm"
                 value={
                     editor.isActive('heading', { level: 1 })
                         ? '1'
@@ -285,28 +373,16 @@ function MenuBar({ editor }: { editor: any }) {
                                             : 'paragraph'
                 }
             >
-                <option value="paragraph">
-                    <FaParagraph /> Paragraph
-                </option>
-                <option value="1">
-                    <FaHeading /> Heading 1
-                </option>
-                <option value="2">
-                    <FaHeading /> Heading 2
-                </option>
-                <option value="3">
-                    <FaHeading /> Heading 3
-                </option>
-                <option value="4">
-                    <FaHeading /> Heading 4
-                </option>
-                <option value="5">
-                    <FaHeading /> Heading 5
-                </option>
-                <option value="6">
-                    <FaHeading /> Heading 6
-                </option>
+                <option value="paragraph">Paragraph</option>
+                <option value="1">Heading 1</option>
+                <option value="2">Heading 2</option>
+                <option value="3">Heading 3</option>
+                <option value="4">Heading 4</option>
+                <option value="5">Heading 5</option>
+                <option value="6">Heading 6</option>
             </select>
+
+            <div className="h-6 w-px bg-gray-300 mx-1"></div>
 
             {/* Lists */}
             <button
@@ -334,6 +410,8 @@ function MenuBar({ editor }: { editor: any }) {
                 <FaTasks />
             </button>
 
+            <div className="h-6 w-px bg-gray-300 mx-1"></div>
+
             {/* Block Elements */}
             <button
                 type="button"
@@ -359,6 +437,8 @@ function MenuBar({ editor }: { editor: any }) {
             >
                 <FaTable />
             </button>
+
+            <div className="h-6 w-px bg-gray-300 mx-1"></div>
 
             {/* Text Alignment */}
             <button
@@ -394,11 +474,13 @@ function MenuBar({ editor }: { editor: any }) {
                 <FaAlignJustify />
             </button>
 
+            <div className="h-6 w-px bg-gray-300 mx-1"></div>
+
             {/* Text Styling */}
             <div className="relative group">
                 <button
                     type="button"
-                    className="p-2 rounded hover:bg-gray-200"
+                    className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('highlight') ? 'bg-gray-200' : ''}`}
                     title="Highlight"
                 >
                     <FaHighlighter />
@@ -423,7 +505,7 @@ function MenuBar({ editor }: { editor: any }) {
             <div className="relative group">
                 <button
                     type="button"
-                    className="p-2 rounded hover:bg-gray-200"
+                    className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('textStyle') && editor.getAttributes('textStyle').color ? 'bg-gray-200' : ''}`}
                     title="Text color"
                 >
                     <FaPalette />
@@ -448,7 +530,7 @@ function MenuBar({ editor }: { editor: any }) {
             <div className="relative group">
                 <button
                     type="button"
-                    className="p-2 rounded hover:bg-gray-200"
+                    className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('textStyle') && editor.getAttributes('textStyle').fontFamily ? 'bg-gray-200' : ''}`}
                     title="Font family"
                 >
                     <MdFontDownload />
@@ -476,6 +558,8 @@ function MenuBar({ editor }: { editor: any }) {
                     </select>
                 </div>
             </div>
+
+            <div className="h-6 w-px bg-gray-300 mx-1"></div>
 
             {/* Media */}
             <button

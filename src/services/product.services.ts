@@ -12,8 +12,8 @@ export async function fetchProductByIdOrSlug<T>(
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Origin: window.location.origin,
       },
+      cache: "no-store",
     });
 
     if (!response.ok) {
@@ -42,6 +42,7 @@ export async function updateProductSection<T>(
       headers: {
         "Content-Type": "application/json",
       },
+      cache: "no-store",
       body: JSON.stringify({ [section]: data }),
     });
 
@@ -113,7 +114,7 @@ export async function createProduct(
   }
 }
 
-export async function fetchProducts(params: {
+export async function fetchProducts<T>(params: {
   section?: string;
   brand?: string;
   isActive?: boolean;
@@ -130,7 +131,7 @@ export async function fetchProducts(params: {
   getAll?: boolean;
   page?: number;
   limit?: number;
-}): Promise<IApiResponse<any>> {
+}): Promise<IApiResponse<T>> {
   // Using 'any' since we're not creating new interfaces
   try {
     const response = await fetch(`${baseUrl}/api/products/find-product`, {

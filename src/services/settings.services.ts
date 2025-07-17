@@ -28,10 +28,11 @@ interface FetchSettingsParams {
     sortOrder?: "asc" | "desc";
   };
 }
-const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export async function fetchSettings(
   params?: FetchSettingsParams
-): Promise<IApiResponse<ISettings[]>> {
+): Promise<IApiResponse<ISettings>> {
   const response = await fetch(`${baseUrl}/api/settings`, {
     method: "POST",
     headers: {
@@ -193,7 +194,6 @@ export async function updateSectionSettings<T>(
   data: T
 ): Promise<IApiResponse<T>> {
   try {
-    console.log("base url", `${baseUrl}/api/settings/${section}`);
     const response = await fetch(`${baseUrl}/api/settings/${section}`, {
       method: "POST",
       headers: {

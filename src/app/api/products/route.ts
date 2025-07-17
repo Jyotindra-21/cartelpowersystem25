@@ -9,8 +9,6 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    console.log("body", body);
-    console.log("body", body.basicInfo?.name);
     // Validate required basic info
     if (!body.basicInfo?.name) {
       return NextResponse.json(
@@ -71,7 +69,6 @@ export async function POST(request: Request) {
     }
 
     // Create the product
-    console.log("productData", productData);
     const product = await ProductModel.create(productData);
 
     return NextResponse.json(

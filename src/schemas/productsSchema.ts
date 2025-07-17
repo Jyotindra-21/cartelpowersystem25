@@ -1,4 +1,4 @@
-import mongoose, { Types } from "mongoose";
+import  { Types } from "mongoose";
 import { z } from "zod";
 
 export const SlugParamsSchema = z
@@ -58,15 +58,15 @@ export const ProductPricingSchema = z.object({
   price: z.number().min(0, "Price must be positive"),
   oldPrice: z.number().min(0).optional(),
   discountPercentage: z.number().min(0).max(100).optional(),
-  hasDiscount: z.boolean().default(false),
-  taxIncluded: z.boolean().default(false),
+  hasDiscount: z.boolean().default(false).optional(),
+  taxIncluded: z.boolean().default(false).optional(),
   costPrice: z.number().min(0).optional(),
 });
 
 export const ProductInventorySchema = z.object({
-  inStock: z.boolean().default(true),
-  stockQuantity: z.number().min(0).optional(),
+  inStock: z.boolean().default(true).optional(),
   sku: z.string().min(1, "SKU is required"),
+  stockQuantity: z.number(),
   barcode: z.string().optional(),
 });
 

@@ -136,7 +136,7 @@ export async function POST(request: Request) {
       ]);
       return NextResponse.json({
         success: true,
-        data: settings,
+        data: settings?.[0],
         pagination: {
           page,
           limit,

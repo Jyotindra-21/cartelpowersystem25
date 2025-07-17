@@ -11,7 +11,6 @@ export async function POST(request: Request) {
 
     // Find original product with proper typing
 
-    console.log("originalId", originalId);
     const originalProduct = await ProductModel.findById(originalId);
 
     if (!originalProduct || !originalProduct.basicInfo) {
@@ -20,7 +19,6 @@ export async function POST(request: Request) {
         { status: 404 }
       );
     }
-    console.log("originalProduct", originalProduct);
 
     const productData = originalProduct.toObject();
 
@@ -71,9 +69,7 @@ export async function POST(request: Request) {
       clonedProduct.basicInfo.slug = `${newSlug}-${Math.random().toString(36).substring(2, 5)}`;
     }
 
-    // console.log("clonedProduct", clonedProduct);
 
-    console.log("clonedProduct", clonedProduct);
     // Create the cloned product
     const newProduct = await ProductModel.create(clonedProduct);
 

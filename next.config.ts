@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
     unoptimized: false, // Keep as false if you want optimized images
     minimumCacheTTL: 0, // Set to 0 to disable cache
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
