@@ -1,15 +1,15 @@
+import { API_URL } from "@/lib/constant";
 import { convertSvgToPathArray } from "@/lib/svg-converter";
 import { svgLogoSchema } from "@/schemas/logoSchema";
 import { z } from "zod";
 
 // Type for our logo data
-const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
 export type LogoData = z.infer<typeof svgLogoSchema>;
 
 // Fetch the active logo
 export async function getActiveSvgLogo(): Promise<LogoData | null> {
   try {
-    const response = await fetch(`${baseUrl}/api/svglogo`);
+    const response = await fetch(`${API_URL}/api/svglogo`);
     if (!response.ok) throw new Error("Failed to fetch logo");
     return await response.json();
   } catch (error) {
@@ -21,7 +21,7 @@ export async function getActiveSvgLogo(): Promise<LogoData | null> {
 // Create or update logo
 export async function saveSvgLogo(data: LogoData): Promise<LogoData | null> {
   try {
-    const response = await fetch("/api/svglogo", {
+    const response = await fetch(`${API_URL}/api/svglogo`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

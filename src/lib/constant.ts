@@ -55,3 +55,6 @@ export const POSITION_OPTIONS = [
     className: "top-[60%] right-[10%]"
   }
 ] as const;
+
+
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "";

@@ -1,14 +1,14 @@
+import { API_URL } from "@/lib/constant";
 import { IProductDocument } from "@/models/productModel";
 import { IProduct, ProductSections } from "@/schemas/productsSchema";
 import { IApiResponse } from "@/types/ApiResponse";
 
-const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export async function fetchProductByIdOrSlug<T>(
   param: string
 ): Promise<IApiResponse<T>> {
   try {
-    const response = await fetch(`${baseUrl}/api/products/${param}`, {
+    const response = await fetch(`${API_URL}/api/products/${param}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export async function updateProductSection<T>(
   data: Partial<ProductSections[keyof ProductSections]>
 ): Promise<IApiResponse<T>> {
   try {
-    const response = await fetch(`${baseUrl}/api/products/${param}`, {
+    const response = await fetch(`${API_URL}/api/products/${param}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export async function deleteProduct(
   param: string
 ): Promise<IApiResponse<{ _id: string }>> {
   try {
-    const response = await fetch(`${baseUrl}/api/products/${param}`, {
+    const response = await fetch(`${API_URL}/api/products/${param}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -91,7 +91,7 @@ export async function createProduct(
   productData: Partial<IProduct>
 ): Promise<IApiResponse<IProductDocument>> {
   try {
-    const response = await fetch(`${baseUrl}/api/products`, {
+    const response = await fetch(`${API_URL}/api/products`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -134,7 +134,7 @@ export async function fetchProducts<T>(params: {
 }): Promise<IApiResponse<T>> {
   // Using 'any' since we're not creating new interfaces
   try {
-    const response = await fetch(`${baseUrl}/api/products/find-product`, {
+    const response = await fetch(`${API_URL}/api/products/find-product`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -169,7 +169,7 @@ export async function checkSlugAvailability(
 ): Promise<IApiResponse<SlugCheckResponse>> {
   try {
     const response = await fetch(
-      `${baseUrl}/api/products/check-slug?slug=${encodeURIComponent(slug)}`,
+      `${API_URL}/api/products/check-slug?slug=${encodeURIComponent(slug)}`,
       {
         method: "GET",
         headers: {
@@ -197,7 +197,7 @@ export async function cloneProduct(
   originalId: string
 ): Promise<IApiResponse<IProductDocument>> {
   try {
-    const response = await fetch(`${baseUrl}/api/products/clone`, {
+    const response = await fetch(`${API_URL}/api/products/clone`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

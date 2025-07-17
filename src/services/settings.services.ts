@@ -1,3 +1,4 @@
+import { API_URL } from "@/lib/constant";
 import {
   IFooterSection,
   IHeroSection,
@@ -28,12 +29,11 @@ interface FetchSettingsParams {
     sortOrder?: "asc" | "desc";
   };
 }
-const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export async function fetchSettings(
   params?: FetchSettingsParams
 ): Promise<IApiResponse<ISettings>> {
-  const response = await fetch(`${baseUrl}/api/settings`, {
+  const response = await fetch(`${API_URL}/api/settings`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export async function createSettings(params: ISettingsCreateInput): Promise<{
   success: boolean;
   data: ISettings;
 }> {
-  const response = await fetch(`${baseUrl}/api/settings`, {
+  const response = await fetch(`${API_URL}/api/settings`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export async function updateSettings(params: ISettingsUpdateInput): Promise<{
   success: boolean;
   data: ISettings;
 }> {
-  const response = await fetch(`${baseUrl}/api/settings`, {
+  const response = await fetch(`${API_URL}/api/settings`, {
     method: "POST", // or "PUT" if you prefer
     headers: {
       "Content-Type": "application/json",
@@ -167,7 +167,7 @@ export async function fetchSectionSettings<T>(
   section: SettingsSection
 ): Promise<IApiResponse<T>> {
   try {
-    const response = await fetch(`${baseUrl}/api/settings/${section}`, {
+    const response = await fetch(`${API_URL}/api/settings/${section}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -194,7 +194,7 @@ export async function updateSectionSettings<T>(
   data: T
 ): Promise<IApiResponse<T>> {
   try {
-    const response = await fetch(`${baseUrl}/api/settings/${section}`, {
+    const response = await fetch(`${API_URL}/api/settings/${section}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
