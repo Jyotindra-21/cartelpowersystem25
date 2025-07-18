@@ -1,27 +1,21 @@
-"use client"
 import SidebarRoutes from "./sidebar-routes";
 import { motion } from "framer-motion";
 import { PhoneCall, ChevronDown } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
 import Link from "next/link";
-import Image from "next/image";
-import LogoReveal from "@/components/custom/LogoReveal";
 import { IWebsiteInfo } from "@/schemas/settingsSchema";
 import { ISvgLogo } from "@/schemas/logoSchema";
+import Image from "next/image";
+import LogoReveal from "@/components/custom/LogoReveal";
 
 interface SidebarProps {
-<<<<<<< HEAD
     websiteInfo?: IWebsiteInfo
     svgLogo?: ISvgLogo | null
-=======
->>>>>>> 55ff9e80e78b1734cecc5d93a70cbc211e1c8f7f
     setOpen?: (open: boolean) => void
-    websiteInfo?:IWebsiteInfo,
-    svgLogo?:ISvgLogo
 }
 
-const Sidebar = ({ setOpen,websiteInfo , svgLogo }: SidebarProps) => {
+const Sidebar = ({ setOpen, websiteInfo, svgLogo }: SidebarProps) => {
     const { data: session } = useSession();
     const user: User = session?.user;
     return (
@@ -50,7 +44,7 @@ const Sidebar = ({ setOpen,websiteInfo , svgLogo }: SidebarProps) => {
                             <>
                                 {!websiteInfo?.logo ? (<>
                                     <h6 className='uppercase text-3xl'>
-                                        {websiteInfo?.metaTitle?.split(' ')?.[0] || ""}
+                                        {websiteInfo?.metaTitle?.split(' ')?.[0] || "company logo"}
                                     </h6>
                                 </>) : (
 
