@@ -82,7 +82,7 @@ const LogoSection = ({ websiteInfo, svgLogo }: INavbarProps) => (
                     />
                 ) : (
                     <h6 className='uppercase text-3xl'>
-                        {websiteInfo?.metaTitle?.split(' ')?.[0] || "company logo"}
+                        {websiteInfo?.metaTitle?.split(' ')?.[0] || ""}
                     </h6>
                 )}
             </>
