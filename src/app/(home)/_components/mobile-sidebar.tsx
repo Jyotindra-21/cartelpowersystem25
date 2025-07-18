@@ -14,7 +14,7 @@ import { ISvgLogo } from "@/schemas/logoSchema";
 
 interface IMobileSidebarProps {
     websiteInfo?: IWebsiteInfo
-    svgLogo?: ISvgLogo
+    svgLogo?: ISvgLogo | null
 }
 
 export const MobileSidebar = ({ websiteInfo, svgLogo }: IMobileSidebarProps) => {

@@ -22,24 +22,32 @@ export async function POST(request: Request) {
 
     const productData = originalProduct.toObject();
 
-    // Prepare cloned data with required basicInfo
     const clonedProduct = {
-      ...productData,
       basicInfo: {
-        ...productData.basicInfo,
+        slug: `Copy of ${productData.basicInfo.slug}`,
         name: `Copy of ${productData.basicInfo.name}`,
+        brand: productData.brand,
+        shortDescription: productData.shortDescription,
+        description: productData.description,
+      },
+      media: {
+        ...productData.media,
+      },
+      pricing: {
+        ...productData.pricing,
       },
       inventory: {
         ...productData.inventory,
         sku: `COPY-${Math.random().toString(36).substring(2, 6)}`,
       },
-      // Transform tags from object to array
+      featuresSection: {
+        ...productData.featuresSection,
+      },
       tags: {
         tags: Array.isArray(productData.tags)
           ? productData.tags
           : productData.tags?.tags || [],
       },
-      // Extract just the warranty string
       warranty: {
         warranty:
           typeof productData.warranty === "string"
@@ -48,31 +56,31 @@ export async function POST(request: Request) {
         warrantyDuration: productData.warranty?.warrantyDuration || "",
         supportInfo: productData.warranty?.supportInfo || "",
       },
-      // Ensure dates are fresh
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      // Remove the _id to create a new document
-      _id: undefined,
-      __v: undefined,
+      flags: {
+        isNewProduct: true,
+        isBanner: false,
+        isHighlighted: false,
+        isActive: true,
+      },
+      seo: {
+        ...productData.seo,
+      },
+      resources: {
+        ...productData.resources,
+      },
     } as IProductDocument;
-
     // Generate new slug - now safe because basicInfo is required
     const newSlug = generateSlug(clonedProduct.basicInfo.name);
     clonedProduct.basicInfo.slug = newSlug;
-
     // Check for slug uniqueness
     const existingProduct = await ProductModel.findOne({
       "basicInfo.slug": newSlug,
     });
-
     if (existingProduct) {
       clonedProduct.basicInfo.slug = `${newSlug}-${Math.random().toString(36).substring(2, 5)}`;
     }
-
-
     // Create the cloned product
     const newProduct = await ProductModel.create(clonedProduct);
-
     return NextResponse.json(
       {
         success: true,

@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { IFeatures, IHeroSection } from '@/schemas/settingsSchema'
 import { IProduct } from '@/schemas/productsSchema'
 import FloatingFeature from '@/components/custom/FloatingFeatures'
+import Image from 'next/image'
 
 
 interface HeroPageProps {
@@ -41,7 +42,7 @@ const HeroPage = ({ heroSection, banners }: HeroPageProps) => {
                 )}
             </div>
             {/* Main grid container with visible lines */}
-            <div className='grid md:grid-cols-2 w-full max-w-[1200px] md:m-auto relative z-10 py-12'>
+            <div className='grid grid-cols-1 md:grid-cols-2 w-full max-w-[1200px] mx-auto relative z-10 py-12 md:py-20 gap-8 md:gap-12'>
                 {/* Left Column with right border */}
                 <div className="relative flex m-auto">
                     <div className='flex flex-col justify-center z-10 gap-6 w-full'>
@@ -90,8 +91,8 @@ const HeroPage = ({ heroSection, banners }: HeroPageProps) => {
                 </div>
 
                 {/* Right Column with left border indicator */}
-                <div className='relative m-auto'>
-                    <div className="relative h-full min-h-[400px]">
+                <div className='relative order-1 md:order-2'>
+                    <div className="relative h-full min-h-[300px] sm:min-h-[400px]">
                         <div className="absolute -inset-8 bg-gradient-to-br from-secondary/10 to-primary/20 rounded-3xl blur-xl opacity-60 z-0"></div>
                         {banners && banners?.length > 0 ? <Carousel
                             className="w-full h-full flex justify-center items-center relative z-20"
@@ -110,13 +111,14 @@ const HeroPage = ({ heroSection, banners }: HeroPageProps) => {
                                     <CarouselItem key={index} >
                                         <Link href={`/product/${item?.basicInfo.slug}`}>
                                             <div className="flex flex-col items-center p-4 h-full">
-                                                <div className="relative bg-gradient-to-t from-black/5 hover:from-black/20 transition-transform duration-1000 to-transparent w-full h-full max-w-md group">
+                                                <div className="relative bg-gradient-to-t from-black/5 hover:from-black/20 transition-transform duration-1000 to-transparent w-full h-full max-w-lg  group">
                                                     <img
+                                                        // height={600}
+                                                        // width={600}
                                                         src={item?.media && item?.media.mainImage || ""}
                                                         className="w-full h-auto object-contain rounded-xl shadow-2xl border border-white/10 transition-transform "
                                                         alt={item?.basicInfo.slug || ""}
                                                     />
-
                                                     {item?.flags && item?.flags.isNewProduct ? (<div className="absolute -top-3 -left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md z-30 flex items-center">
 
                                                         NEW

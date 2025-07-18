@@ -4,6 +4,7 @@ import Title from '../title'
 import { IOurStorySection } from '@/schemas/settingsSchema'
 import { motion } from "framer-motion"
 import { DynamicIcon } from '@/components/custom/DynamicIcon'
+import Image from 'next/image'
 
 interface AboutPageProps {
     ourStory?: IOurStorySection
@@ -41,9 +42,12 @@ const OurStoryPage = ({ ourStory }: AboutPageProps) => {
                         transition={{ duration: 0.7 }}
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-teal-900/30 to-blue-900/30 rounded-xl -z-10"></div>
-                        <img
+                        <Image
+                            width={300}
+                            height={300}
                             src={ourStory?.image || ""}
                             alt="Cartel Team"
+                            
                             className="w-full h-auto rounded-xl shadow-lg"
                         />
                     </motion.div>

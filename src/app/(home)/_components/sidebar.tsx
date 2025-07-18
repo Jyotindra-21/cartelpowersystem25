@@ -11,7 +11,7 @@ import LogoReveal from "@/components/custom/LogoReveal";
 
 interface SidebarProps {
     websiteInfo?: IWebsiteInfo
-    svgLogo?: ISvgLogo
+    svgLogo?: ISvgLogo | null
     setOpen?: (open: boolean) => void
 }
 
