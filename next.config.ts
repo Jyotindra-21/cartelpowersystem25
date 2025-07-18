@@ -19,31 +19,14 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: false,
     // Add these for better Vercel compatibility
-    serverComponentsExternalPackages: ["lightningcss"],
-    externalDir: true,
+    optimizePackageImports: ["lightningcss"],
+    serverComponentsExternalPackages: ["lightningcss", "@vercel/og"],
   },
   // Enhanced webpack configuration
-  webpack: (config, { isServer, webpack }) => {
-    // Resolve path aliases (if you use them)
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      "@": path.resolve(__dirname),
-    };
-
-    if (!isServer) {
-      config.externals = {
-        ...config.externals,
-        lightningcss: "lightningcss",
-        // Add other client-side only packages if needed
-      };
-    }
-
-    // Important for Vercel builds
-    config.module = {
-      ...config.module,
-      exprContextCritical: false,
-    };
-
+  // Update webpack config:
+  webpack: (config) => {
+    config.externals = config.externals || {};
+    config.externals["lightningcss"] = "lightningcss";
     return config;
   },
   // Vercel-specific optimizations
