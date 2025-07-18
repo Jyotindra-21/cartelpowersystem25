@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "ik.imagekit.io",
-        port: "",
-        pathname: "/**", // Add this to allow all paths from this host
+        // port: "", // Can be removed (empty string is default)
+        pathname: "/**",
       },
     ],
   },
@@ -18,20 +18,24 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizeCss: false,
-    // Add these for better Vercel compatibility
-    optimizePackageImports: ["lightningcss"],
-    serverComponentsExternalPackages: ["lightningcss", "@vercel/og"],
   },
-  // Enhanced webpack configuration
-  // Update webpack config:
-  webpack: (config) => {
+  transpilePackages: ["lightningcss"],
+  webpack: (config, { isServer }) => {
     config.externals = config.externals || {};
     config.externals["lightningcss"] = "lightningcss";
+
+    // Recommended safety checks:
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
+
     return config;
   },
-  // Vercel-specific optimizations
   compress: true,
-  productionBrowserSourceMaps: false, // Disable for faster builds
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;
