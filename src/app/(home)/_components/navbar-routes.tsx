@@ -91,9 +91,9 @@ const LogoSection = ({ websiteInfo, svgLogo }: INavbarProps) => (
 );
 
 const NavLink = ({ href, text }: { href: string; text: string }) => (
-    <Link href={href} passHref legacyBehavior>
+    <Link href={href} passHref >
         <Button asChild size="sm" variant="navLink">
-            <a>{text}</a>
+            <span>{text}</span>
         </Button>
     </Link>
 );
@@ -145,21 +145,19 @@ const LogoutButton = () => (
     <button
         type="button"
         onClick={() => signOut()}
-        className="flex items-center gap-2 w-fit bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-secondary/50 rounded-xl text-white hover:text-secondary text-sm py-1 px-2 transition-all duration-300 ease-in-out group relative overflow-hidden"
+        className="cursor-pointer flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white hover:text-secondary text-sm py-1 px-3 transition-colors duration-200"
     >
-        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -translate-x-full group-hover:translate-x-0"></span>
-        <LogOut className="h-4 w-4 text-secondary group-hover:text-white transition-colors" />
-        <span className="relative group-hover:scale-105 transition-transform">Logout</span>
+        <LogOut className="h-4 w-4 text-secondary" />
+        <span>Logout</span>
     </button>
 );
 
 const LoginButton = () => (
-    <Link href="/sign-in" passHref legacyBehavior>
-        <a className="w-fit bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-secondary/50 rounded-xl text-white hover:text-secondary text-sm py-1 px-2 transition-all duration-300 ease-in-out group relative overflow-hidden">
-            <span className="absolute inset-0 bg-secondary/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-            <span className="relative group-hover:scale-105 transition-transform">Login</span>
-            <span className="absolute top-0 left-1/4 w-1/2 h-[1px] bg-white/30 transform -translate-y-full group-hover:translate-y-[300%] transition-transform duration-500"></span>
-        </a>
+    <Link
+        href="/sign-in"
+        className=" cursor-pointer inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white hover:text-secondary text-sm py-1 px-3 transition-colors duration-200"
+    >
+        <span>Login</span>
     </Link>
 );
 

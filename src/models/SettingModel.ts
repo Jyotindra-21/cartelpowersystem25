@@ -22,6 +22,7 @@ const WebsiteInfoSchema = new Schema<IWebsiteInfo & Document>({
   logo: { type: String },
   svg: { type: String },
   isSvg: { type: Boolean, default: true },
+  tagLine: { type: String },
   metaTitle: { type: String },
   metaDescription: { type: String },
   metaData: { type: String },

@@ -7,7 +7,8 @@ import {
   Users,
   Settings,
   ShoppingCart,
-  LogOut
+  LogOut,
+  Phone
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -34,6 +35,11 @@ export function AdminSidebar({ closeMobileMenu }: SidebarProps) {
       name: 'Products',
       href: '/admin/products',
       icon: ShoppingCart,
+    },
+    {
+      name: 'Contacts',
+      href: '/admin/contacts',
+      icon: Phone,
     },
     {
       name: 'Settings',

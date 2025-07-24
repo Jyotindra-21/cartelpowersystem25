@@ -35,6 +35,7 @@ export function WebsiteInfoForm({ initialData, svgLogo, onSuccess, isLoading }: 
             logo: "",
             svg: "",
             isSvg: true,
+            tagLine: "",
             metaTitle: "",
             metaDescription: "",
             metaData: "",
@@ -210,6 +211,19 @@ export function WebsiteInfoForm({ initialData, svgLogo, onSuccess, isLoading }: 
                     </div>
                 )}
 
+                <FormField
+                    control={form.control}
+                    name="tagLine"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Tag Line</FormLabel>
+                            <FormControl>
+                                <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
                 <FormField
                     control={form.control}
                     name="metaTitle"

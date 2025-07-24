@@ -10,6 +10,7 @@ import {
   getFilteredRowModel,
   useReactTable,
   ColumnFiltersState,
+  Table as ReactTable,
 } from "@tanstack/react-table"
 import React, { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
@@ -27,64 +28,157 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Filter,
 } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { BaseType } from "@/types/commonTypes"
+import { DataTableToolbar } from "./dataTableToolbar"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   filterableColumns?: string[]
+  bulkAction?: boolean
+  bulkActionsHeader?: React.ComponentType<{ table: ReactTable<TData> }>
+  manualPagination?: boolean
+  pagination?: {
+    page: number
+    limit: number
+    total?: number
+    pages?: number
+    hasNextPage?: boolean
+    hasPrevPage?: boolean
+  }
+  onPaginationChange?: (page: number, limit: number) => void
+  isLoading?: boolean
 }
+
+
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   filterableColumns = [],
+  bulkAction = false,
+  bulkActionsHeader,
+  manualPagination = false,
+  pagination = {
+    page: 1,
+    limit: 10,
+  },
+  onPaginationChange,
+  isLoading = false,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [isIOS, setIsIOS] = useState(false)
+  const [internalPageIndex, setInternalPageIndex] = useState(0)
+  const [internalPageSize, setInternalPageSize] = useState(pagination?.limit || 10)
 
   useEffect(() => {
-    // Detect iOS devices
     setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent))
   }, [])
 
-  const table = useReactTable({
+  const table = useReactTable<TData>({
     data,
     columns,
-    initialState: {
-      pagination: {
-        pageSize: 10,
-      },
-    },
+    ...(manualPagination ? {
+      manualPagination: true
+    } : {}),
+    ...(manualPagination ? { pageCount: pagination?.pages } : {}),
+    ...(manualPagination ? {
+      initialState: {
+        pagination: {
+          pageIndex: internalPageIndex,
+          pageSize: internalPageSize,
+        }
+        ,
+      }
+    } : {
+      initialState: {
+        pagination: {
+          pageSize: 10,
+        }
+      }
+    })
+    ,
     state: {
       columnFilters,
       globalFilter,
-      sorting
+      sorting,
+      ...(manualPagination ? {
+        pagination: {
+          pageIndex: pagination.page - 1, // Convert to zero-based index
+          pageSize: pagination.limit,
+        }
+      } : {})
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    ...(!manualPagination && {
+      getPaginationRowModel: getPaginationRowModel(),
+    }),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+
   })
+
+
+  const handlePageChange = (newPage: number) => {
+    if (manualPagination && onPaginationChange) {
+      onPaginationChange(newPage + 1, internalPageSize)
+    } else {
+      table.setPageIndex(newPage)
+    }
+    setInternalPageIndex(newPage)
+  }
+
+  const handlePageSizeChange = (newLimit: number) => {
+    if (manualPagination && onPaginationChange) {
+      onPaginationChange(1, newLimit)
+      setInternalPageIndex(0)
+    } else {
+      table.setPageIndex(0)
+      table.setPageSize(newLimit)
+    }
+    setInternalPageSize(newLimit)
+  }
+
+
+  const pageCount = manualPagination
+    ? pagination?.pages || Math.ceil((pagination?.total || 0) / internalPageSize)
+    : table.getPageCount()
+
+  const canPreviousPage = manualPagination
+    ? pagination?.hasPrevPage ?? (internalPageIndex > 0)
+    : table.getCanPreviousPage()
+
+  const canNextPage = manualPagination
+    ? pagination?.hasNextPage ?? (internalPageIndex < pageCount - 1)
+    : table.getCanNextPage()
+
 
   return (
     <div className="space-y-4">
       {/* Mobile-Optimized Filters */}
       <div className="flex flex-col gap-3">
         <div className="w-full">
-          <Input
-            placeholder="Search..."
-            value={globalFilter}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            className="w-full sm:max-w-sm focus:ring-0 focus:ring-offset-0 focus:outline-none"
-          />
+          <div className="relative">
+            <Input
+              placeholder="Search..."
+              value={globalFilter}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              className="pl-8 w-full sm:max-w-sm focus:ring-0 focus:ring-offset-0 focus:outline-none"
+            />
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          </div>
         </div>
+        {bulkAction && <div className="flex justify-end">
+          <DataTableToolbar<TData> table={table} bulkActionsHeader={bulkActionsHeader} />
+        </div>}
 
         <div className="flex flex-wrap gap-2">
           {filterableColumns.map(columnId => {
@@ -122,7 +216,13 @@ export function DataTable<TData, TValue>({
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    Loading...
+                  </TableCell>
+                </TableRow>
+              ) : (table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
@@ -141,11 +241,13 @@ export function DataTable<TData, TValue>({
                     No results found.
                   </TableCell>
                 </TableRow>
+              )
               )}
             </TableBody>
           </Table>
         </div>
       </div>
+
 
       {/* Mobile-Friendly Pagination */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -156,9 +258,11 @@ export function DataTable<TData, TValue>({
           </p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
-            onValueChange={(value) => {
-              table.setPageSize(Number(value))
-            }}
+            // onValueChange={(value) => {
+            //   table.setPageSize(Number(value))
+            // }}
+            onValueChange={(value) => manualPagination ? handlePageSizeChange(Number(value)) : table.setPageSize(Number(value))}
+            disabled={isLoading}
           >
             <SelectTrigger className="h-8 w-[70px] xs:w-[80px] focus:ring-0 focus:ring-offset-0 focus:outline-none">
               <SelectValue placeholder={table.getState().pagination.pageSize} />
@@ -186,8 +290,9 @@ export function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
+                onClick={() => handlePageChange(0)}
+                disabled={!canPreviousPage || isLoading}
+                // disabled={!table.getCanPreviousPage()}
                 className="h-8 w-8 p-0 hidden xs:inline-flex"
                 aria-label="First page"
               >
@@ -196,8 +301,9 @@ export function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
+                onClick={() => manualPagination ? handlePageChange(internalPageIndex - 1) : table.previousPage()}
+                // disabled={!table.getCanPreviousPage()}
+                disabled={!canPreviousPage || isLoading}
                 className="h-8 w-8 p-0"
                 aria-label="Previous page"
               >
@@ -206,8 +312,9 @@ export function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
+                onClick={() => manualPagination ? handlePageChange(internalPageIndex + 1) : table.nextPage()}
+                disabled={!canNextPage || isLoading}
+                // disabled={!table.getCanNextPage()}
                 className="h-8 w-8 p-0"
                 aria-label="Next page"
               >
@@ -216,8 +323,9 @@ export function DataTable<TData, TValue>({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                disabled={!table.getCanNextPage()}
+                onClick={() => manualPagination ? handlePageChange(pageCount - 1) : table.setPageIndex(table.getPageCount() - 1)}
+                // disabled={!table.getCanNextPage()}
+                disabled={!canNextPage || isLoading}
                 className="h-8 w-8 p-0 hidden xs:inline-flex"
                 aria-label="Last page"
               >
@@ -230,3 +338,7 @@ export function DataTable<TData, TValue>({
     </div>
   )
 }
+
+
+
+

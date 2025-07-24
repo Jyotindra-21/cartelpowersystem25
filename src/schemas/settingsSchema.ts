@@ -5,6 +5,7 @@ export const WebsiteSchema = z.object({
   logo: z.string().optional(),
   svg: z.string().optional(),
   isSvg: z.boolean().default(true).optional(),
+  tagLine: z.string().optional(),
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   metaData: z.string().optional(),

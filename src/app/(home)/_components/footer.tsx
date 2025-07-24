@@ -1,10 +1,23 @@
-"use client"
-import { Facebook, Instagram, Linkedin, Twitter, Zap, Contact, Microchip } from 'lucide-react'
+import { DynamicIcon } from '@/components/custom/DynamicIcon';
+import LogoReveal from '@/components/custom/LogoReveal';
+import { ISvgLogo } from '@/schemas/logoSchema';
+import { IFooterSection, IWebsiteInfo } from '@/schemas/settingsSchema';
+import { fetchFooterSection, fetchWebsiteInfo } from '@/services/settings.services';
+import { getActiveSvgLogo } from '@/services/svglogo.services';
+import { IApiResponse } from '@/types/ApiResponse';
+import { Zap, Contact, Microchip } from 'lucide-react'
+import Image from 'next/image';
 import Link from 'next/link'
 import React from 'react'
-import { motion } from "framer-motion"
 
-const Footer = () => {
+const Footer = async () => {
+    const [websiteInfoRes, svgLogo, footerRes] = await Promise.all([
+        fetchWebsiteInfo() as Promise<IApiResponse<IWebsiteInfo>>,
+        getActiveSvgLogo() as Promise<ISvgLogo>,
+        fetchFooterSection() as Promise<IApiResponse<IFooterSection>>,
+    ]);
+    const { data: websiteInfo } = websiteInfoRes;
+    const { data: footerSection } = footerRes;
     return (
         <footer className="relative bg-gradient-to-b from-primary to-black overflow-hidden">
             {/* Animated power wave effect */}
@@ -17,38 +30,51 @@ const Footer = () => {
                         {/* Company info */}
                         <div>
                             <div className="flex items-center">
-                                <motion.div
+                                <div
                                     className="drop-shadow-[1px_1px_2px_white] rounded-tl-2xl rounded-bl-2xl"
-                                    initial={{ filter: '0 0' }}
-                                    animate={{ filter: '100% 100%' }}
-                                    transition={{
-                                        duration: 2,
-                                        repeat: Infinity,
-                                        repeatType: 'reverse',
-                                        ease: 'easeInOut'
-                                    }}
+
                                 >
-                                    {/* <LogoReveal /> */} logo
-                                </motion.div>
+                                    {websiteInfo?.isSvg ? (
+                                        <LogoReveal
+                                            size={svgLogo?.svg?.size || 150}
+                                            initialData={{
+                                                viewBox: svgLogo?.svg.viewBox || "",
+                                                paths: JSON.parse(svgLogo?.svg.paths || "[]"),
+                                                animation: svgLogo?.svg.animation
+                                            }}
+                                        />
+                                    ) : (
+                                        <>
+                                            {websiteInfo?.logo ? (
+                                                <Image
+                                                    unoptimized
+                                                    src={websiteInfo.logo}
+                                                    alt="logo-image"
+                                                    width={150}
+                                                    height={200}
+                                                />
+                                            ) : (
+                                                <h6 className='uppercase text-3xl'>
+                                                    {websiteInfo?.metaTitle?.split(' ')?.[0] || ""}
+                                                </h6>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
                                 {/* <Power className="text-secondary h-8 w-8" />
                                 <span className="text-2xl font-bold text-white">Cartel Power System</span> */}
                             </div>
-                            <p className="text-secondary tracking-[6px]  w-auto font-thin text-md mt-0 mb-6 ml-[4px]">
-                                Make Believe
-                            </p>
+
+                            {websiteInfo?.tagLine && <p className="text-secondary tracking-[4px]  w-auto font-thin text-md mt-0 mb-6 ">
+                                {websiteInfo?.tagLine}
+                            </p>}
+
                             <div className="flex  space-x-4">
-                                <Link href="#" className="text-gray-400 hover:text-secondary transition-colors">
-                                    <Facebook className="h-8 w-8" />
-                                </Link>
-                                <Link href="#" className="text-gray-400 hover:text-secondary transition-colors">
-                                    <Instagram className="h-8 w-8" />
-                                </Link>
-                                <Link href="#" className="text-gray-400 hover:text-secondary transition-colors">
-                                    <Twitter className="h-8 w-8" />
-                                </Link>
-                                <Link href="#" className="text-gray-400 hover:text-secondary transition-colors">
-                                    <Linkedin className="h-8 w-8" />
-                                </Link>
+                                {footerSection?.socialMedia?.map((item, index) => (
+                                    <Link key={index} href={`${item.url}`} className="text-gray-400 hover:text-secondary transition-colors">
+                                        {<DynamicIcon iconName={item.icon || "Star"} className="h-6 w-6" />}
+                                    </Link>
+                                ))}
                             </div>
                         </div>
 
@@ -59,27 +85,13 @@ const Footer = () => {
                                 Quick Links
                             </h3>
                             <ul className="space-y-2">
-                                <li>
-                                    <Link href="/product" className="text-gray-400 hover:text-white transition-colors">
-                                        Products
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
-                                        Contact
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/about-us/company-overview" className="text-gray-400 hover:text-white transition-colors">
-                                        Company Overview
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/about-us/board-of-directors" className="text-gray-400 hover:text-white transition-colors">
-                                        Board Of Directors
-                                    </Link>
-                                </li>
-
+                                {footerSection?.quickLinks?.map((item, index) => (
+                                    <li key={index}>
+                                        <Link href={`${item.link}`} className="text-gray-400 hover:text-white transition-colors">
+                                            {item.title}
+                                        </Link>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
 
@@ -90,26 +102,13 @@ const Footer = () => {
                                 Technology
                             </h3>
                             <ul className="space-y-2">
-                                <li>
-                                    <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                                        How ARD Works
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                                        Safety Standards
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                                        Installation Guide
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                                        Maintenance
-                                    </Link>
-                                </li>
+                                {footerSection?.technology?.map((item, index) => (
+                                    <li key={index}>
+                                        <Link href={`${item.fileUrl}`} className="text-gray-400 hover:text-white transition-colors">
+                                            {item.title}
+                                        </Link>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
 
@@ -120,11 +119,11 @@ const Footer = () => {
                                 Contact Details
                             </h3>
                             <address className="text-gray-400 not-italic">
-                                <p>123 Power Street</p>
-                                <p>Industrial Zone, Mumbai</p>
-                                <p>Maharashtra 400001</p>
-                                <p className="mt-2">Phone: +91 8780074795</p>
-                                <p>Email: info@cartelpower.com</p>
+                                <p>{footerSection?.contactDetails?.address}</p>
+                                {/* <p>Industrial Zone, Mumbai</p>
+                                <p>Maharashtra 400001</p> */}
+                                <p className="mt-2">Phone: {footerSection?.contactDetails?.phone}</p>
+                                <p>Email: {footerSection?.contactDetails?.email}</p>
                             </address>
                         </div>
                     </div>
@@ -175,9 +174,6 @@ const Footer = () => {
                                 </Link>
                                 <Link href="/terms-and-conditions" className="text-gray-400 hover:text-white text-sm transition-colors">
                                     Terms &amp; Conditions
-                                </Link>
-                                <Link href="/sitemap" className="text-gray-400 hover:text-white text-sm transition-colors">
-                                    Sitemap
                                 </Link>
                             </div>
                         </div>

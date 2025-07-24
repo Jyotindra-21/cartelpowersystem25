@@ -32,9 +32,10 @@ export default async function ProductsPage() {
       </div>
       {/* Table container - should NOT have its own scroll */}
       {product && (
-        <DataTable
+        <DataTable<IProduct, unknown>
           columns={columns}
           data={product}
+
         />
       )}
     </>

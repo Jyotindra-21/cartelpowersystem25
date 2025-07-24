@@ -82,6 +82,7 @@ export async function POST(request: Request) {
         }> = [
           // Website Info
           { "websiteInfo.metaTitle": searchRegex },
+          { "websiteInfo.tagLine": searchRegex },
           { "websiteInfo.metaDescription": searchRegex },
           { "websiteInfo.metaData": searchRegex },
           { "websiteInfo.metaTags": searchRegex },
