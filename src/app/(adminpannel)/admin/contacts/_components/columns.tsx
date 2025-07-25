@@ -105,7 +105,7 @@ export function BulkActionsHeader<TData extends IContactForm>({
             <>
               <Trash2 className="mr-2 h-4 w-4 text-red-500" />
               Delete
-              <DeleteDialog ids={selectedIds} onSuccess={onSuccess} isBulk={true} >
+              <DeleteDialog ids={selectedIds} onSuccess={onSuccess} isBulk={true} table={table}>
                 <button id="delete-dialog-trigger" className="hidden" />
               </DeleteDialog>
             </>

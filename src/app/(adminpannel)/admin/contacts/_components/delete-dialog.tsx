@@ -12,15 +12,18 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from '@/components/hooks/use-toast'
 import { deleteContact } from '@/services/contact.services'
+import { Table } from '@tanstack/react-table'
+import { IContactForm } from '@/schemas/contactSchema'
 
-interface DeleteDialogProps {
+interface DeleteDialogProps<TData extends IContactForm> {
   ids: string[] // Changed from id to ids array
   children: React.ReactNode
   onSuccess?: () => void
   isBulk?: boolean // Flag to indicate bulk operation
+  table?: Table<TData>
 }
 
-export function DeleteDialog({ ids, children, onSuccess, isBulk = false }: DeleteDialogProps) {
+export function DeleteDialog<TData extends IContactForm>({ ids, children, onSuccess, isBulk = false, table }: DeleteDialogProps<TData>) {
   const [open, setOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const router = useRouter()
@@ -31,7 +34,7 @@ export function DeleteDialog({ ids, children, onSuccess, isBulk = false }: Delet
       // Handle both single and bulk deletes
       const deletePromises = ids.map(id => deleteContact(id))
       const results = await Promise.all(deletePromises)
-      
+
       const failedDeletes = results.filter(r => !r.success)
       if (failedDeletes.length > 0) {
         throw new Error(`${failedDeletes.length} deletions failed`)
@@ -39,12 +42,15 @@ export function DeleteDialog({ ids, children, onSuccess, isBulk = false }: Delet
 
       toast({
         title: 'Success',
-        description: isBulk 
+        description: isBulk
           ? `${ids.length} contacts deleted successfully`
           : 'Contact deleted successfully',
       })
-      
+
       if (onSuccess) onSuccess()
+      if (table) {
+        table.resetRowSelection()
+      }
       router.refresh()
       setOpen(false)
     } catch (error) {
