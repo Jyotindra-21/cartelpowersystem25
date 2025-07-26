@@ -20,9 +20,11 @@ type ContactStatus = 'new' | 'inprogress' | 'resolved'
 export function ContactDialog({
     contact,
     children,
+    onSuccess,
 }: {
     contact: IContactForm
     children: React.ReactNode
+    onSuccess?: () => void
 }) {
     const router = useRouter()
     const [open, setOpen] = useState(false)
@@ -44,7 +46,9 @@ export function ContactDialog({
             })
 
             router.refresh()
+            if (onSuccess) onSuccess()
             setOpen(false)
+
         } catch (error) {
             toast({
                 title: 'Error',

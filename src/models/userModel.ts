@@ -13,13 +13,26 @@ const UserSchema: Schema<IUserDocument> = new Schema(
       required: [true, "Username is required"],
       trim: true,
       unique: true,
+      index: true,
+      lowercase: true,
     },
     email: {
       type: String,
       required: [true, "Email is required"],
       unique: true,
       match: [/.+\@.+\..+/, "Please use a valid email address"],
+      index: true,
+      lowercase: true,
     },
+    name: { type: String },
+    phone: { type: String },
+    gender: {
+      type: String,
+      enum: ["male", "female", "other"],
+      default: "other",
+    },
+    banner: { type: String },
+    image: { type: String },
     password: {
       type: String,
       required: [true, "Password is required"],
@@ -28,6 +41,7 @@ const UserSchema: Schema<IUserDocument> = new Schema(
       type: String,
       required: false,
     },
+
     verifyCodeExpiry: {
       type: Date,
       required: false,

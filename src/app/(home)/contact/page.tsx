@@ -5,6 +5,7 @@ import { fetchFooterSection } from '@/services/settings.services';
 import { IApiResponse } from '@/types/ApiResponse';
 import { IFooterSection } from '@/schemas/settingsSchema';
 import CommonBanner from '../_components/common-banner';
+export const dynamic = 'force-dynamic';
 
 const Contact = async () => {
   const [footerRes] = await Promise.all([

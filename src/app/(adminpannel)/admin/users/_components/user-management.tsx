@@ -10,7 +10,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { User } from './types'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -24,21 +24,13 @@ export function UserManagement({ initialUsers = [] }: UserManagementProps) {
     const columns = getColumns()
     const { data: session } = useSession()
     const currentUser = session?.user as User | undefined
-    const [searchTerm, setSearchTerm] = useState('')
     const [activeTab, setActiveTab] = useState<'all' | 'admin' | 'user'>('all')
     const [isRefreshing, setIsRefreshing] = useState(false)
-
     // Filter users based on active tab and search term
     const filteredUsers = initialUsers.filter(user => {
         // Tab filter
         const roleMatch = activeTab === 'all' || user.role === activeTab
-
-        // Search filter
-        const searchMatch = searchTerm === '' ||
-            user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email?.toLowerCase().includes(searchTerm.toLowerCase())
-
-        return roleMatch && searchMatch
+        return roleMatch
     })
 
     const handleTabChange = (value: string) => {
@@ -68,7 +60,6 @@ export function UserManagement({ initialUsers = [] }: UserManagementProps) {
                         Manage all registered users and their permissions
                     </p>
                 </div>
-
                 <div className="flex items-center gap-2 justify-end">
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -83,7 +74,6 @@ export function UserManagement({ initialUsers = [] }: UserManagementProps) {
                         </TooltipTrigger>
                         <TooltipContent>Refresh data</TooltipContent>
                     </Tooltip>
-
                     {currentUser?.role === "admin" && (
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -103,7 +93,7 @@ export function UserManagement({ initialUsers = [] }: UserManagementProps) {
             <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     {/* Enhanced tabs with proper background color change */}
-                    <TabsList className="relative p-0 h-auto bg-muted/50 rounded-lg gap-1 border-2 flex">
+                    <TabsList className="relative p-0 h-auto rounded-lg flex">
                         {[
                             { value: 'all', label: 'All', count: userCounts.all },
                             { value: 'admin', label: 'Admins', count: userCounts.admin },
@@ -112,51 +102,23 @@ export function UserManagement({ initialUsers = [] }: UserManagementProps) {
                             <TabsTrigger
                                 key={tab.value}
                                 value={tab.value}
-                                className="relative p-0 text-sm font-medium rounded-md cursor-pointer"
+                                className={`px-3 py-1 text-xs rounded-lg cursor-pointer transition-colors capitalize ${activeTab === tab.value
+                                    ? "!bg-blue-100 text-blue-600"
+                                    : "hover:bg-gray-100"
+                                    }`}
                             >
-                                <span className="relative flex items-center gap-1.5 py-1 px-2">
-                                    <AnimatePresence>
-                                        {activeTab === tab.value && (
-                                            <motion.span
-                                                layoutId="activeTabBg"
-                                                className="absolute inset-0 bg-primary rounded-md"
-                                                initial={false}
-                                                transition={{
-                                                    type: "spring",
-                                                    stiffness: 500,
-                                                    damping: 30,
-                                                    mass: 0.5
-                                                }}
-                                            />
-                                        )}
-                                    </AnimatePresence>
-
-                                    <span className="relative z-10 flex items-center gap-1.5">
-                                        <motion.span
-                                            animate={{
-                                                color: activeTab === tab.value ? '#fff' : '#64748b',
-                                                fontWeight: activeTab === tab.value ? 600 : 400
-                                            }}
-                                            transition={{ duration: 0.15 }}
-                                        >
-                                            {tab.label}
-                                        </motion.span>
-                                        <Badge
-                                            variant={"secondary"}
-                                            className={`px-1.5 py-0 text-xs ${activeTab === tab.value ? '' : 'bg-primary/10 text-primary'
-                                                }`}
-                                        >
-                                            {tab.count}
-                                        </Badge>
-                                    </span>
-                                </span>
+                                {tab.value}
+                                <Badge
+                                    variant={"secondary"}
+                                    className={`px-1.5 py-0 text-xs ${activeTab === tab.value ? '' : 'bg-primary/10 text-primary'
+                                        }`}
+                                >
+                                    {tab.count}
+                                </Badge>
                             </TabsTrigger>
                         ))}
                     </TabsList>
-
-
                 </div>
-
                 {/* Content area */}
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}

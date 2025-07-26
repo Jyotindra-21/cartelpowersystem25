@@ -1,14 +1,10 @@
 'use client'
-
 import { BulkActionsHeader, getContactColumns } from './columns'
 import { DataTable } from '@/components/custom/data-table'
 import { IContactForm } from '@/schemas/contactSchema'
 import { getContacts } from '@/services/contact.services'
 import { Pagination } from '@/types/ApiResponse'
 import { useState } from 'react'
-export const dynamic = 'force-dynamic'; // Force dynamic rendering
-export const revalidate = 0; //
-
 interface ContactManagementProps {
     contact: IContactForm[]
     paginationData: Pagination

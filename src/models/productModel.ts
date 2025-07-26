@@ -68,7 +68,7 @@ const productImageSchema = new Schema<IProductImage & Document>({
 // Section schemas
 const basicInfoSchema = new Schema<IProductBasicInfo & Document>({
   name: { type: String, required: true },
-  slug: { type: String, optional: true, index: true },
+  slug: { type: String, optional: true },
   // category: { type: String, optional: true },
   // subcategory: { type: String, optional: true },
   brand: { type: String, optional: true },
@@ -200,7 +200,13 @@ productSchema.virtual("id").get(function () {
   return this._id.toString();
 });
 
-productSchema.index({ "basicInfo.slug": 1 }, { unique: true });
+productSchema.index(
+  { "basicInfo.slug": 1 },
+  {
+    unique: true,
+    collation: { locale: "en", strength: 2 },
+  }
+);
 
 // ====================== MIDDLEWARE ORGANIZATION ======================
 // 1. VALIDATION MIDDLEWARE

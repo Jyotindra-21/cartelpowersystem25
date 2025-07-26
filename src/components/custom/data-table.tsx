@@ -29,6 +29,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Filter,
+  LoaderCircle,
 } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { BaseType } from "@/types/commonTypes"
@@ -219,7 +220,9 @@ export function DataTable<TData, TValue>({
               {isLoading ? (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 text-center">
-                    Loading...
+                    <div className="flex items-center justify-center">
+                      <LoaderCircle className="animate-spin text-center" />
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : (table.getRowModel().rows?.length ? (

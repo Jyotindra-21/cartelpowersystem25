@@ -194,7 +194,7 @@ const ActionsCell = ({ row, onSuccess }: { row: { original: IContactForm }, onSu
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {/* Edit Contact */}
-        <ContactDialog contact={contact}>
+        <ContactDialog contact={contact} onSuccess={onSuccess}>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <div className="flex items-center px-2 py-1 cursor-pointer w-full">
               <Edit className="mr-2 h-4 w-4 text-blue-600" />

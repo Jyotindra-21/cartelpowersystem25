@@ -1,5 +1,4 @@
 'use client'
-
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
@@ -13,12 +12,43 @@ import {
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { signOut } from 'next-auth/react'
+import { IApiResponse } from '@/types/ApiResponse'
+import { IWebsiteInfo } from '@/schemas/settingsSchema'
+import { ISvgLogo } from '@/schemas/logoSchema'
+import { fetchWebsiteInfo } from '@/services/settings.services'
+import { getActiveSvgLogo } from '@/services/svglogo.services'
+import { useEffect, useState } from 'react'
+import { toast } from '@/components/hooks/use-toast'
+import Image from 'next/image'
+import LogoReveal from '@/components/custom/LogoReveal'
 
 interface SidebarProps {
   closeMobileMenu?: () => void
 }
 
 export function AdminSidebar({ closeMobileMenu }: SidebarProps) {
+
+  const [svgLogo, setSvgLogo] = useState<ISvgLogo | null>(null)
+  const [websiteInfo, setWebsiteInfo] = useState<IWebsiteInfo | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const fetchData = async () => {
+    setIsLoading(true)
+    try {
+      const [websiteInfoRes, svgLogo] = await Promise.all([
+        fetchWebsiteInfo() as Promise<IApiResponse<IWebsiteInfo>>,
+        getActiveSvgLogo() as Promise<ISvgLogo>,
+      ]);
+      const { data: websiteInfo } = websiteInfoRes;
+      if (websiteInfo) setWebsiteInfo(websiteInfo)
+      setSvgLogo(svgLogo)
+    } catch (error) {
+      toast({ title: "Error", description: `Error : ${error}` })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const pathname = usePathname()
   const navItems = [
     {
@@ -48,13 +78,40 @@ export function AdminSidebar({ closeMobileMenu }: SidebarProps) {
     },
   ]
 
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   return (
     <div className="fixed w-64 sm:w-auto top-0 z-50 h-[100vh] flex-col border-r bg-slate-100 ">
       <div className="flex flex-col h-16 flex-shrink-0 items-start pl-4 pt-2 pr-2  border-b border-gray-200">
-        <h1 className="text-xl font-bold text-gray-900 drop-shadow-[1px_1px_2px_white]">
-          {/* <LogoReveal /> */}
-          logo
-          </h1>
+
+        {isLoading ? (<>loading..</>) : websiteInfo?.isSvg ? (
+          <LogoReveal
+            size={svgLogo?.svg?.size || 150}
+            initialData={{
+              viewBox: svgLogo?.svg.viewBox || "",
+              paths: JSON.parse(svgLogo?.svg.paths || "[]"),
+              animation: svgLogo?.svg.animation
+            }}
+          />
+        ) : (
+          <>
+            {websiteInfo?.logo ? (
+              <Image
+                unoptimized
+                src={websiteInfo.logo}
+                alt="logo-image"
+                width={150}
+                height={200}
+              />
+            ) : (
+              <h6 className='uppercase text-3xl'>
+                {websiteInfo?.metaTitle?.split(' ')?.[0] || ""}
+              </h6>
+            )}
+          </>
+        )}
         <h6 className='leading-[12px] tracking-[5px] text-red-500 '>Admin Panel</h6>
       </div>
       <div className=" flex flex-1 flex-col overflow-y-auto">

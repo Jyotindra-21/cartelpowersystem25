@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import { ContactFormModel } from "@/models/contactModel";
 import { contactFormSchema } from "@/schemas/contactSchema";
+// import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -52,6 +53,7 @@ export async function PATCH(request: Request) {
       { new: true }
     );
 
+    // revalidatePath("/admin/contacts");
     if (!updatedContact) {
       return NextResponse.json(
         { success: false, error: "Contact not found" },
