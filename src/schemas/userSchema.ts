@@ -23,4 +23,6 @@ export type IUser = z.infer<typeof userFormSchema> & {
   password: string;
   verifyCode?: string;
   verifyCodeExpiry?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 };

@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 export default function ProfilePage() {
     const [isEditing, setIsEditing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isFormLoading, setIsFormLoading] = useState(false);
+    const [isFormLoading, setIsFormLoading] = useState(true);
     const [initialValue, setInitialValue] = useState<User | undefined>(undefined);
     const { toast } = useToast();
     const { data: session } = useSession();
@@ -99,8 +99,8 @@ export default function ProfilePage() {
     return (
         <>
             {isFormLoading && (
-                <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50">
-                    <LoaderCircle className="animate-spin h-8 w-8" />
+                <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50 bg-black/50 pointer-events-none">
+                    <LoaderCircle className={`animate-spin h-10 w-10 lg:ml-44`} />
                 </div>
             )}
 
@@ -161,7 +161,7 @@ export default function ProfilePage() {
 
                 <div className="px-8 pb-8">
                     {/* Profile header with avatar */}
-                    <div className="flex flex-col items-center -mt-20">
+                    <div className={`flex flex-col items-center ${isEditing ? "mt-4" : "-mt-20"}`}>
                         <div className="relative group">
                             {isEditing ? (
                                 <FormField
@@ -175,7 +175,7 @@ export default function ProfilePage() {
                                                     {form.watch("name")?.charAt(0) || "U"}
                                                 </AvatarFallback>
                                             </Avatar>
-                                            <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                            <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-100 transition-opacity cursor-pointer">
                                                 <div className="bg-white/80 p-2 rounded-full">
                                                     <ImageIcon className="h-5 w-5 text-gray-800" />
                                                 </div>
@@ -203,13 +203,13 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Profile content */}
-                    <div className="mt-8 space-y-6">
-                        <div className="flex justify-between items-center">
-                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Profile Settings</h1>
+                    <div className="mt-16 space-y-6">
+                        <div className=" justify-between items-center">
+                            <h1 className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white">Profile Settings</h1>
                             {isEditing ? (
-                                <div className="flex gap-3">
+                                <div className="flex gap-3 justify-end">
                                     <Button
-                                        variant="outline"
+                                        variant="destructive"
                                         size="sm"
                                         onClick={() => setIsEditing(false)}
                                         disabled={isLoading}
@@ -220,27 +220,31 @@ export default function ProfilePage() {
                                     </Button>
                                     <Button
                                         size="sm"
+                                        variant="primary"
                                         onClick={form.handleSubmit(onSubmit)}
                                         disabled={isLoading}
-                                        className="gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                                        className="gap-2 "
                                     >
                                         {isLoading ? (
                                             <Loader2 className="h-4 w-4 animate-spin" />
                                         ) : (
                                             <Check className="h-4 w-4" />
                                         )}
-                                        Save Changes
+                                        Save
                                     </Button>
                                 </div>
                             ) : (
-                                <Button
-                                    size="sm"
-                                    onClick={() => setIsEditing(true)}
-                                    className="gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                                >
-                                    <Pencil className="h-4 w-4" />
-                                    Edit Profile
-                                </Button>
+                                <div className="flex gap-3 justify-end">
+                                    <Button
+
+                                        size="sm"
+                                        onClick={() => setIsEditing(true)}
+                                        className="gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                                    >
+                                        <Pencil className="h-4 w-4" />
+                                        Edit
+                                    </Button>
+                                </div>
                             )}
                         </div>
 

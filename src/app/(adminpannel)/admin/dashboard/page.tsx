@@ -4,12 +4,11 @@ import { motion } from "framer-motion"
 import {
   LayoutDashboard,
   Users,
-  CheckCircle,
   FileText,
   User,
   ArrowRight,
-  IndianRupee,
-  Clock
+  Clock,
+  LoaderCircle
 } from "lucide-react"
 import {
   Card,
@@ -31,50 +30,22 @@ import {
   ResponsiveContainer,
   Cell
 } from 'recharts'
+import { fetchDashboard, IDashboardData } from "@/services/dashboard.services"
+import { useEffect, useState } from "react"
+import { toast } from "@/components/hooks/use-toast"
+import { DashboardDataType } from "@/types/commonTypes"
+import { DynamicIcon } from "@/components/custom/DynamicIcon"
+import Link from "next/link"
 
 export default function DashboardPage() {
-  const metrics = [
-    {
-      title: "Annual Revenue",
-      value: "289,451",
-      change: "+18.2% from last year",
-      icon: <IndianRupee className="h-8 w-8 text-emerald-100" />,
-      trend: "up",
-      color: "from-emerald-500 to-emerald-200",
-    },
-    {
-      title: "Active Projects",
-      value: "24",
-      change: "+3 this month",
-      icon: <LayoutDashboard className="h-8 w-8 text-blue-100" />,
-      trend: "up",
-      color: "from-blue-500 to-blue-200",
-    },
-    {
-      title: "Team Members",
-      value: "18",
-      change: "2 new hires",
-      icon: <Users className="h-8 w-8 text-violet-100" />,
-      trend: "up",
-      color: "from-violet-500 to-violet-200",
-    },
-    {
-      title: "Pending Tasks",
-      value: "7",
-      change: "-2 from yesterday",
-      icon: <CheckCircle className="h-8 w-8 text-amber-100" />,
-      trend: "down",
-      color: "from-amber-500 to-amber-200",
-    }
-  ];
-
+  const [isLoading, setIsLoading] = useState(false)
+  const [dashboardData, setDashboardData] = useState<DashboardDataType | undefined>(undefined)
   const teamMembers = [
     { name: "Alex Chen", role: "Lead Designer", avatar: <User className="h-5 w-5" /> },
     { name: "Samira Khan", role: "Frontend Dev", avatar: <User className="h-5 w-5" /> },
     { name: "Jordan Smith", role: "Backend Dev", avatar: <User className="h-5 w-5" /> },
     { name: "Taylor Wong", role: "Marketing", avatar: <User className="h-5 w-5" /> }
   ];
-
   const events = [
     {
       title: "Team Sync",
@@ -96,23 +67,26 @@ export default function DashboardPage() {
     }
   ];
 
-  // Chart data
-  const revenueData = [
-    { name: 'Jan', revenue: 4000 },
-    { name: 'Feb', revenue: 3000 },
-    { name: 'Mar', revenue: 5000 },
-    { name: 'Apr', revenue: 2780 },
-    { name: 'May', revenue: 1890 },
-    { name: 'Jun', revenue: 2390 },
-  ];
-
-  const projectStatusData = [
-    { name: 'Completed', value: 35 },
-    { name: 'In Progress', value: 45 },
-    { name: 'Not Started', value: 20 },
-  ];
-
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+  const COLORS = ['#00C49F', '#FFBB28', '#0088FE'];
+  const fetchData = async () => {
+    setIsLoading(true)
+    try {
+      const { data } = await fetchDashboard()
+      setDashboardData(data)
+    } catch (error) {
+      toast({ title: "Error", description: `${error}`, variant: "destructive" })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  useEffect(() => { fetchData() }, [])
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50 bg-black/50 pointer-events-none">
+        <LoaderCircle className={`animate-spin h-10 w-10 lg:ml-44`} />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen p-4 bg-neutral-100 rounded-xl">
@@ -149,46 +123,44 @@ export default function DashboardPage() {
 
         {/* Metrics Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          {metrics.map((metric, index) => (
-            <motion.div
+          {dashboardData?.metrics.map((metric, index) => (
+            <Link
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="relative"
+              href={metric.href || '#'} // Add your desired path here
+              passHref
             >
-              <div className={`relative rounded-2xl p-6 bg-gradient-to-br ${metric.color} backdrop-blur-lg border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all overflow-hidden`}>
+              <div className={`relative rounded-2xl p-6 bg-gradient-to-br ${metric?.gradientColor} backdrop-blur-lg border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all overflow-hidden cursor-pointer`}>
                 <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#ffffff2e_1px,transparent_1px),linear-gradient(to_bottom,#ffffff2e_1px,transparent_1px)] bg-[size:50px_52px] [mask-image:radial-gradient(ellipse_60%_67%_at_50%_60%,#000_70%,transparent_100%)]">
                 </div>
                 <div className="relative z-10 flex justify-between items-start">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{metric.title}</p>
+                    <p className="text-md font-medium text-gray-800">{metric.title}</p>
                     <p className="text-2xl font-bold text-gray-900 mt-2">{metric.value}</p>
-                    <p className={`text-xs mt-1 ${metric.trend === 'up' ? 'text-emerald-600' : 'text-amber-600'}`}>
+                    <p className={`text-sm mt-1 ${metric.trend === 'up' ? 'text-emerald-600' : 'text-amber-700'}`}>
                       {metric.change}
                     </p>
                   </div>
-                  <div className="rounded-lg  backdrop-blur-sm text-indigo-600">
-                    {metric.icon}
+                  <div className="rounded-lg backdrop-blur-sm text-indigo-600">
+                    <DynamicIcon iconName={metric.icon} className={`h-8 w-8 ${metric?.textColor}`} />
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </Link>
           ))}
         </div>
 
         {/* Charts Section */}
         <div className="grid gap-6 mb-8 lg:grid-cols-2">
-          {/* Revenue Chart */}
+          {/* user Chart */}
           <Card className="rounded-2xl border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.05)]">
             <CardHeader>
-              <CardTitle>Revenue Overview</CardTitle>
-              <CardDescription>Monthly revenue trends for the current year</CardDescription>
+              <CardTitle>User Overview</CardTitle>
+              <CardDescription>Monthly new user for the current year</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={revenueData}>
+                  <LineChart data={dashboardData?.userGrowthData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                     <XAxis dataKey="name" stroke="#888" />
                     <YAxis stroke="#888" />
@@ -196,7 +168,7 @@ export default function DashboardPage() {
                     <Legend />
                     <Line
                       type="monotone"
-                      dataKey="revenue"
+                      dataKey="user"
                       stroke="#8884d8"
                       strokeWidth={2}
                       activeDot={{ r: 8 }}
@@ -210,15 +182,15 @@ export default function DashboardPage() {
           {/* Project Status Chart */}
           <Card className="rounded-2xl border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.05)]">
             <CardHeader>
-              <CardTitle>Project Status</CardTitle>
-              <CardDescription>Distribution of projects by status</CardDescription>
+              <CardTitle>Contact Status</CardTitle>
+              <CardDescription>Distribution of contact by status</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={projectStatusData}
+                      data={dashboardData?.contactStatusData}
                       cx="50%"
                       cy="50%"
                       labelLine={false}
@@ -227,7 +199,7 @@ export default function DashboardPage() {
                       dataKey="value"
                       label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                     >
-                      {projectStatusData.map((entry, index) => (
+                      {dashboardData?.contactStatusData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -338,6 +310,6 @@ export default function DashboardPage() {
           </motion.div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }

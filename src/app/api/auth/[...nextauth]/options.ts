@@ -48,6 +48,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token._id = user.id; // Convert ObjectId to string
         token.isVerified = user.isVerified;
+        token.image = user.image;
         token.isAdmin = user.isAdmin;
         token.username = user.username;
         token.role = user.role;
@@ -59,6 +60,7 @@ export const authOptions: NextAuthOptions = {
         session.user._id = token._id;
         session.user.isVerified = token.isVerified;
         session.user.isAdmin = token.isAdmin;
+        session.user.image = token.image;
         session.user.username = token.username;
         session.user.role = token.role;
       }
