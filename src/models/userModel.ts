@@ -26,6 +26,7 @@ const UserSchema: Schema<IUserDocument> = new Schema(
     },
     name: { type: String },
     phone: { type: String },
+    position: { type: String },
     gender: {
       type: String,
       enum: ["male", "female", "other"],

@@ -82,7 +82,7 @@ export async function GET() {
         trend: visitorsThisMonth > visitorsLastMonth ? "up" : "down",
         gradientColor: "from-emerald-500 to-emerald-200",
         textColor: "text-emerald-100",
-        href:"/admin/visitor"
+        href: "/admin/visitor",
       },
       {
         title: "Active Products",
@@ -92,7 +92,7 @@ export async function GET() {
         trend: productsThisMonth > productsLastMonth ? "up" : "down",
         gradientColor: "from-blue-500 to-blue-200",
         textColor: "text-blue-100",
-        href:"/admin/products"
+        href: "/admin/products",
       },
       {
         title: "Total Users",
@@ -102,7 +102,7 @@ export async function GET() {
         trend: usersThisMonth > usersLastMonth ? "up" : "down",
         gradientColor: "from-violet-500 to-violet-200",
         textColor: "text-violet-100",
-        href:"/admin/users"
+        href: "/admin/users",
       },
       {
         title: "Total Contacts",
@@ -112,7 +112,7 @@ export async function GET() {
         trend: contactsThisMonth > contactsLastMonth ? "up" : "down",
         gradientColor: "from-amber-500 to-amber-200",
         textColor: "text-amber-100",
-        href:"/admin/contacts"
+        href: "/admin/contacts",
       },
     ];
 
@@ -185,6 +185,14 @@ export async function GET() {
       },
     ];
 
+    const teamMembers = users
+      .filter((u) => u.isAdmin)
+      .map((admin) => ({
+        name: admin.name,
+        position: admin.position, // Assuming the original has 'role' property
+        image: admin.image || "", // Fallback to default image if avatar not provided
+      }));
+
     return NextResponse.json({
       success: true,
       data: {
@@ -192,6 +200,7 @@ export async function GET() {
         userGrowthData: userGrowthByMonth,
         productGrowthData: productGrowthByMonth,
         contactStatusData: contactStatusData,
+        teamMembers: teamMembers,
       },
     });
   } catch (error) {

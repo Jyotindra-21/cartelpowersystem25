@@ -7,7 +7,9 @@ import {
   Settings,
   ShoppingCart,
   LogOut,
-  Phone
+  Phone,
+  UserSearch,
+  CalendarSearch
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -72,6 +74,16 @@ export function AdminSidebar({ closeMobileMenu }: SidebarProps) {
       icon: Phone,
     },
     {
+      name: 'Visitor',
+      href: '/admin/visitor',
+      icon: UserSearch,
+    },
+    {
+      name: 'Events',
+      href: '/admin/events',
+      icon: CalendarSearch,
+    },
+    {
       name: 'Settings',
       href: '/admin/settings',
       icon: Settings,
@@ -86,7 +98,7 @@ export function AdminSidebar({ closeMobileMenu }: SidebarProps) {
     <div className="fixed w-64 sm:w-auto top-0 z-50 h-[100vh] flex-col border-r bg-slate-100 ">
       <div className="flex flex-col h-16 flex-shrink-0 items-start pl-4 pt-2 pr-2  border-b border-gray-200">
 
-        {isLoading ? (<>loading..</>) : websiteInfo?.isSvg ? (
+        {isLoading ? "" : websiteInfo?.isSvg ? (
           <LogoReveal
             size={svgLogo?.svg?.size || 150}
             initialData={{

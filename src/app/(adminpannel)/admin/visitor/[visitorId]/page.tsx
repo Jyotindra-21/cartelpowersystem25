@@ -1,6 +1,10 @@
 'use client';
 
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import type { LatLngExpression } from 'leaflet';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { formatDuration, formatPageName } from "@/lib/helper";
 import {
@@ -180,6 +184,19 @@ export default function VisitorAnalyticsPage({ params }: PageProps) {
             ).length || 1
         }));
 
+    const DefaultIcon = L.icon({
+        iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    L.Marker.prototype.options.icon = DefaultIcon;
+    const lat = visitorData?.location?.ll?.[0];
+    const lng = visitorData?.location?.ll?.[1];
+    const hasValidCoords = typeof lat === 'number' && typeof lng === 'number';
     return (
         <div className="container mx-auto py-8">
             <div className="flex flex-col gap-2 mb-8">
@@ -190,7 +207,7 @@ export default function VisitorAnalyticsPage({ params }: PageProps) {
             </div>
 
             {/* Summary Cards */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
                 <Card>
                     <CardHeader className="pb-2">
                         <CardTitle className="text-base font-medium">Visitor Time</CardTitle>
@@ -261,36 +278,46 @@ export default function VisitorAnalyticsPage({ params }: PageProps) {
                     </CardContent>
                 </Card>
 
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium">Session Duration</CardTitle>
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            {formatDuration(totalSessionTime)}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            {visitorData?.visitCount} page views
-                        </p>
-                    </CardContent>
-                </Card>
-
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-medium">Location</CardTitle>
                         <MapPin className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">
-                            {visitorData?.location?.ll?.every((coord: any) => coord === null)
-                                ? 'Unknown'
-                                : `${visitorData?.location?.ll[0]}, ${visitorData?.location?.ll[1]}`}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            IP: {visitorData?.ipAddress}
-                        </p>
+                        {/* Map Visualization */}
+                        {hasValidCoords ? (
+                            <div className="mt-4 h-40 rounded-md overflow-hidden">
+                                <MapContainer
+                                    center={[lat, lng] as LatLngExpression}
+                                    zoom={13}
+                                    style={{ height: '100%', width: '100%' }}
+                                    scrollWheelZoom={false}
+                                >
+                                    <TileLayer
+                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                    />
+                                    <Marker position={[lat, lng] as LatLngExpression}>
+                                        <Popup>
+                                            Visitor location <br />
+                                            IP: {visitorData?.ipAddress}
+                                        </Popup>
+                                    </Marker>
+                                </MapContainer>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="text-2xl font-bold">
+                                    {visitorData?.location?.ll?.every((coord: any) => coord === null)
+                                        ? 'Unknown'
+                                        : `${visitorData?.location?.ll[0]}, ${visitorData?.location?.ll[1]}`}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    IP: {visitorData?.ipAddress}
+                                </p>
+                            </>
+                        )}
+
                     </CardContent>
                 </Card>
             </div>

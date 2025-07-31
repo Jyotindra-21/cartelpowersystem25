@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DeleteDialog } from './delete-dialog'
 import { IVisitorList } from '@/types/commonTypes'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 
 interface BulkActionsHeaderProps<TData extends IVisitorList> {
@@ -138,8 +139,10 @@ export const getVisitorColumns = (onSuccess?: () => void): ColumnDef<IVisitorLis
     accessorKey: 'visitorId',
     header: 'Visitor ID',
     cell: ({ row }) => {
+      const router = useRouter()
+      const visitor = row.original
       const id = row.getValue('visitorId') as string
-      return <span className="font-mono">{id.slice(0, 8)}...</span>
+      return <span className="font-mono hover:text-primary cursor-pointer" onClick={() => router.replace(`/admin/visitor/${visitor._id}`)}>{id.slice(0, 8)}...</span>
     }
   },
   {

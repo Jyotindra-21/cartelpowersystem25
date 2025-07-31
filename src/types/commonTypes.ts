@@ -25,11 +25,18 @@ export interface IStatusDataItem {
   value: number;
   percentage?: number;
 }
+
+export interface ITeamMembers {
+  name: string;
+  position: string;
+  image: string;
+}
 export interface DashboardDataType {
   metrics: IMetrics[];
   userGrowthData: IUserGrowthData[];
   productGrowthData: IProductGrowthData[];
   contactStatusData: IStatusDataItem[];
+  teamMembers: ITeamMembers[];
 }
 
 // Visitor Type

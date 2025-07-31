@@ -24,14 +24,23 @@ export async function GET(req: NextRequest) {
 
   const response = NextResponse.json({ success: true });
 
+  // ✅ Persist visitorId if not already set
+  if (!cookies.get("visitorId")?.value) {
+    response.cookies.set("visitorId", result.visitorId, {
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      path: "/",
+      httpOnly: true,
+    });
+  }
+
   response.cookies.set("sessionId", result.sessionId, {
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: 60 * 30, // 30 minutes
     path: "/",
     httpOnly: true,
   });
 
   response.cookies.set("lastActivity", new Date().toISOString(), {
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: 60 * 30,
     path: "/",
     httpOnly: true,
   });

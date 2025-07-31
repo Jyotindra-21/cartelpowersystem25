@@ -32,14 +32,10 @@ export function DeleteDialog<TData extends IContactForm>({ ids, children, onSucc
     setIsDeleting(true)
     try {
       // Handle both single and bulk deletes
-      const deletePromises = ids.map(id => deleteContact(id))
-      const results = await Promise.all(deletePromises)
-
-      const failedDeletes = results.filter(r => !r.success)
-      if (failedDeletes.length > 0) {
-        throw new Error(`${failedDeletes.length} deletions failed`)
+      const { data } = await deleteContact(ids)
+      if (!data?.deletedCount) {
+        throw new Error(`${data?.deletedCount} deletions failed`)
       }
-
       toast({
         title: 'Success',
         description: isBulk

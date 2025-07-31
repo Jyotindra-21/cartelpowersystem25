@@ -14,6 +14,7 @@ import { toast } from '@/components/hooks/use-toast'
 import { deleteContact } from '@/services/contact.services'
 import { Table } from '@tanstack/react-table'
 import { IVisitorList } from '@/types/commonTypes'
+import { deleteVisitor } from '@/services/visitor.services'
 
 interface DeleteDialogProps<TData extends IVisitorList> {
   ids: string[] // Changed from id to ids array
@@ -32,21 +33,16 @@ export function DeleteDialog<TData extends IVisitorList>({ ids, children, onSucc
     setIsDeleting(true)
     try {
       // Handle both single and bulk deletes
-      const deletePromises = ids.map(id => deleteContact(id))
-      const results = await Promise.all(deletePromises)
-
-      const failedDeletes = results.filter(r => !r.success)
-      if (failedDeletes.length > 0) {
-        throw new Error(`${failedDeletes.length} deletions failed`)
+      const { data } = await deleteVisitor(ids)
+      if (!data?.deletedCount) {
+        throw new Error(`${data?.deletedCount} deletions failed`)
       }
-
       toast({
         title: 'Success',
         description: isBulk
           ? `${ids.length} visitor deleted successfully`
           : 'Visitor deleted successfully',
       })
-
       if (onSuccess) onSuccess()
       if (table) {
         table.resetRowSelection()

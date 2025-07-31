@@ -122,6 +122,10 @@ export const getColumns = (): ColumnDef<User>[] => {
       header: 'Email',
     },
     {
+      accessorKey: 'position',
+      header: 'Position',
+    },
+    {
       accessorKey: 'role',
       header: 'Role',
       cell: ({ row }) => {

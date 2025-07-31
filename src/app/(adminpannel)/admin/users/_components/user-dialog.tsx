@@ -41,6 +41,7 @@ export function UserDialog({ user, children }: UserDialogProps) {
   const defaultValues: Partial<UserFormValues> = {
     username: user?.username || '',
     email: user?.email || '',
+    position: user?.position || '',
     isAdmin: user?.isAdmin || false,
     isVerified: user?.isVerified || false,
     role: user?.role || 'user'
@@ -57,6 +58,7 @@ export function UserDialog({ user, children }: UserDialogProps) {
       form.reset({
         username: user?.username || '',
         email: user?.email || '',
+        position: user?.position || "",
         isAdmin: user?.isAdmin || false,
         isVerified: user?.isVerified || false,
         role: user?.role || 'user'
@@ -137,6 +139,20 @@ export function UserDialog({ user, children }: UserDialogProps) {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="position"
+              disabled={!isAdmin}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Position</FormLabel>
+                  <FormControl>
+                    <Input placeholder="i.e. Manager" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             {isAdmin && (
               <FormField
                 control={form.control}
@@ -144,8 +160,8 @@ export function UserDialog({ user, children }: UserDialogProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Role</FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
+                    <Select
+                      onValueChange={field.onChange}
                       value={field.value}
                       disabled={!isAdmin}
                     >

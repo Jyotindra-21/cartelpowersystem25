@@ -8,6 +8,7 @@ import NextTopLoader from 'nextjs-toploader';
 import AuthProvider from "@/components/providers/AuthProvider";
 import ImagekitProvider from "@/components/providers/ImagekitProvider";
 import { TrackingScript } from "@/components/custom/TrackingScript";
+import { QueryProvider } from "@/components/providers/QueryProvider";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -28,18 +29,21 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <AuthProvider>
-        <body
-          suppressHydrationWarning
-          className={`${inter.variable}`}
-        >
-          <TrackingScript />
-          <Toaster />
-          <NextTopLoader color="#fad000" showSpinner={false} />
-          <ImagekitProvider>
-            {children}
-          </ImagekitProvider>
-        </body>
+        <QueryProvider>
+
+          <body
+            suppressHydrationWarning
+            className={`${inter.variable}`}
+          >
+            <TrackingScript />
+            <Toaster />
+            <NextTopLoader color="#fad000" showSpinner={false} />
+            <ImagekitProvider>
+              {children}
+            </ImagekitProvider>
+          </body>
+        </QueryProvider>
       </AuthProvider>
-    </html>
+    </html >
   );
 }

@@ -1,7 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import { UAParser } from "ua-parser-js";
 import { v4 as uuid } from "uuid";
-import crypto from "crypto";
 import VisitorModel from "@/models/visitorModel";
 
 interface TrackVisitorOptions {
@@ -30,6 +29,7 @@ async function fetchGeoLocation(ip: string) {
     return null;
   }
 }
+
 export async function trackVisitor({
   ip,
   userAgent,
@@ -42,14 +42,20 @@ export async function trackVisitor({
   const uaResult = new UAParser(userAgent).getResult();
   const geo = await fetchGeoLocation(ip);
 
-  const visitorId = generateVisitorId(ip, userAgent);
+  // ✅ Use cookie-stored visitorId instead of IP-based hash
+  let visitorId = cookies.get("visitorId")?.value;
+  const isNewVisitor = !visitorId;
+
+  if (!visitorId) {
+    visitorId = uuid(); // new visitor
+  }
 
   let sessionId = cookies.get("sessionId")?.value;
   const lastActivity = cookies.get("lastActivity")?.value;
   const isNewSession = !sessionId || isSessionExpired(lastActivity);
 
   if (!sessionId || isNewSession) {
-    sessionId = uuid();
+    sessionId = uuid(); // new session
   }
 
   const updateData: any = {
@@ -95,7 +101,6 @@ export async function trackVisitor({
     ],
   };
 
-  // ✅ Safe push logic to prevent MongoDB path errors
   if (isNewSession || !visitor || !Array.isArray(visitor.sessions)) {
     updateData.$push = {
       sessions: sessionData,
@@ -120,13 +125,9 @@ export async function trackVisitor({
   return {
     visitorId,
     sessionId,
-    isNewVisitor: !visitor,
+    isNewVisitor,
     isNewSession,
   };
-}
-
-function generateVisitorId(ip: string, userAgent: string): string {
-  return crypto.createHash("sha256").update(`${ip}-${userAgent}`).digest("hex");
 }
 
 function isBot(userAgent: string): boolean {
@@ -144,6 +145,7 @@ function isBot(userAgent: string): boolean {
   ];
   return new RegExp(botPatterns.join("|"), "i").test(userAgent);
 }
+
 function isSessionExpired(lastActivity?: string): boolean {
   if (!lastActivity) return true;
   const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes

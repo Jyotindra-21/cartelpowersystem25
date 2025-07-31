@@ -12,6 +12,7 @@ export const userFormSchema = z.object({
   gender: z.enum(["male", "female", "other"]).optional(),
   banner: z.string().optional(),
   image: z.string().optional(),
+  position: z.string().optional(),
   isAdmin: z.boolean().default(false).optional(),
   isVerified: z.boolean().default(false).optional(),
 
