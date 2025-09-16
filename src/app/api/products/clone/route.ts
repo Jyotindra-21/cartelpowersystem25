@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import { IProductDocument, ProductModel } from "@/models/productModel";
-import { generateSlug } from "../route";
+
+function generateSlug(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
 export async function POST(request: Request) {
   await dbConnect();

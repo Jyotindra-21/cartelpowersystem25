@@ -2,14 +2,17 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import TeamMember from "@/models/teamMemberModel";
 
-interface Params {
-  params: {
+interface Context {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export async function GET(request: Request, { params }: Params) {
+export async function GET(request: Request, context: Context) {
   await dbConnect();
+  
+  // Await the params promise
+  const params = await context.params;
 
   try {
     const teamMember = await TeamMember.findById(params.id).lean();
@@ -39,8 +42,11 @@ export async function GET(request: Request, { params }: Params) {
   }
 }
 
-export async function PUT(request: Request, { params }: Params) {
+export async function PUT(request: Request, context: Context) {
   await dbConnect();
+  
+  // Await the params promise
+  const params = await context.params;
 
   try {
     const body = await request.json();
@@ -75,8 +81,11 @@ export async function PUT(request: Request, { params }: Params) {
   }
 }
 
-export async function DELETE(request: Request, { params }: Params) {
+export async function DELETE(request: Request, context: Context) {
   await dbConnect();
+  
+  // Await the params promise
+  const params = await context.params;
 
   try {
     const teamMember = await TeamMember.findByIdAndDelete(params.id).lean();

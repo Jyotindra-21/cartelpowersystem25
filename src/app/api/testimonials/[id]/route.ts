@@ -1,19 +1,18 @@
-// app/api/testimonials/[id]/route.ts
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import Testimonial from "@/models/testimonialModel";
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
-
-export async function GET(request: Request, { params }: Params) {
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   await dbConnect();
+  
+  // Await the params promise
+  const { id } = await params;
 
   try {
-    const testimonial = await Testimonial.findById(params.id).lean();
+    const testimonial = await Testimonial.findById(id).lean();
 
     if (!testimonial) {
       return NextResponse.json(
@@ -40,13 +39,19 @@ export async function GET(request: Request, { params }: Params) {
   }
 }
 
-export async function PUT(request: Request, { params }: Params) {
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   await dbConnect();
+  
+  // Await the params promise
+  const { id } = await params;
 
   try {
     const body = await request.json();
     const testimonial = await Testimonial.findByIdAndUpdate(
-      params.id,
+      id,
       body,
       { new: true, runValidators: true }
     ).lean();
@@ -76,11 +81,17 @@ export async function PUT(request: Request, { params }: Params) {
   }
 }
 
-export async function DELETE(request: Request, { params }: Params) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   await dbConnect();
+  
+  // Await the params promise
+  const { id } = await params;
 
   try {
-    const testimonial = await Testimonial.findByIdAndDelete(params.id).lean();
+    const testimonial = await Testimonial.findByIdAndDelete(id).lean();
 
     if (!testimonial) {
       return NextResponse.json(
@@ -94,7 +105,7 @@ export async function DELETE(request: Request, { params }: Params) {
 
     return NextResponse.json({
       success: true,
-      data: { _id: params.id },
+      data: { _id: id },
     });
   } catch (error) {
     return NextResponse.json(

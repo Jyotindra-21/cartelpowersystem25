@@ -3,6 +3,15 @@ import { NextResponse } from "next/server";
 import { ProductModel } from "@/models/productModel";
 import { ProductSchema } from "@/schemas/productsSchema";
 
+// Helper function to generate slug
+function generateSlug(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export async function POST(request: Request) {
   await dbConnect();
 
@@ -104,11 +113,4 @@ export async function POST(request: Request) {
   }
 }
 
-// Helper function to generate slug
-export function generateSlug(name: string) {
-  return name
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
+
