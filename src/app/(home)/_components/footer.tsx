@@ -98,21 +98,23 @@ const Footer = async () => {
                         </div>
 
                         {/* ARD Technology */}
-                        <div className="space-y-4">
-                            <h3 className="text-xl font-semibold text-white flex items-center">
-                                <Microchip className="h-5 w-5 mr-2 text-secondary" />
-                                Technology
-                            </h3>
-                            <ul className="space-y-2">
-                                {footerSection?.technology?.map((item, index) => (
-                                    <li key={index}>
-                                        <Link href={`${item.fileUrl}`} className="text-gray-400 hover:text-white transition-colors">
-                                            {item.title}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                        {footerSection?.technology && footerSection?.technology?.length > 0 && (
+                            <div className="space-y-4">
+                                <h3 className="text-xl font-semibold text-white flex items-center">
+                                    <Microchip className="h-5 w-5 mr-2 text-secondary" />
+                                    Technology
+                                </h3>
+                                <ul className="space-y-2">
+                                    {footerSection?.technology?.map((item, index) => (
+                                        <li key={index}>
+                                            <Link href={`${item.fileUrl}`} className="text-gray-400 hover:text-white transition-colors">
+                                                {item.title}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
 
                         {/* Contact */}
                         <div className="space-y-4">
@@ -132,7 +134,7 @@ const Footer = async () => {
 
                     {/* Newsletter */}
                     {/* <div className='flex flex-wrap  items-end gap-2'> */}
-                    <div className="mt-12 p-6 w-full  h-auto bg-white/5 backdrop-blur-sm border border-white/10  rounded-lg">
+                    {/* <div className="mt-12 p-6 w-full  h-auto bg-white/5 backdrop-blur-sm border border-white/10  rounded-lg">
                         <div className="max-w-2xl mx-auto text-center">
                             <h3 className="text-xl font-semibold text-white mb-2">
                                 Stay Powered With Our Updates
@@ -140,7 +142,7 @@ const Footer = async () => {
                             <p className="text-gray-300 mb-4">
                                 Subscribe to our newsletter for the latest in ARD technology and power solutions.
                             </p>
-                            {/* <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+                            <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
                                 <input
                                     type="email"
                                     placeholder="Your email address"
@@ -149,9 +151,9 @@ const Footer = async () => {
                                 <button className="px-6 py-2 bg-primary hover:bg-secondary rounded transition-colors text-white font-medium">
                                     Subscribe
                                 </button>
-                            </div> */}
+                            </div>
                         </div>
-                    </div>
+                    </div> */}
                     {/* <div className="relative h-44 w-full md:w-[50%]  overflow-hidden shadow-xl bg-gray-100  border-2 border-red-300 rounded-lg">
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3203.4918427871635!2d72.68744946066737!3d23.038858321505764!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e87a3d28e0103%3A0xef1e76eea92cfd48!2sVersatile%20Industrial%20Estate!5e0!3m2!1sen!2sin!4v1751108307488!5m2!1sen!2sin"

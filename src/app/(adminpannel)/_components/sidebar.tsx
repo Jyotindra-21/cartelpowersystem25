@@ -9,7 +9,9 @@ import {
   LogOut,
   Phone,
   UserSearch,
-  CalendarSearch
+  CalendarSearch,
+  ShieldUser,
+  Star,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -77,6 +79,16 @@ export function AdminSidebar({ closeMobileMenu }: SidebarProps) {
       name: 'Visitor',
       href: '/admin/visitor',
       icon: UserSearch,
+    },
+    {
+      name: 'Testimonials',
+      href: '/admin/testimonials',
+      icon: Star,
+    },
+    {
+      name: 'Team Members',
+      href: '/admin/teammembers',
+      icon: ShieldUser,
     },
     {
       name: 'Events',

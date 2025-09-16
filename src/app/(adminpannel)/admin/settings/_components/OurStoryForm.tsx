@@ -16,6 +16,7 @@ import { useState } from "react";
 import { updateOurStorySection } from "@/services/settings.services";
 import { useOurStoryFieldArrays } from "./useSettingsFieldArrays";
 import { ConfirmationDialog } from "@/components/dialogs/ConfirmationDialog";
+import RichTextEditor from "@/components/custom/CustomRichTextEditor";
 
 interface OurStoryFormProps {
     initialData?: IOurStorySection;
@@ -206,7 +207,7 @@ export function OurStoryForm({ initialData, onSuccess }: OurStoryFormProps) {
                             <FormItem>
                                 <FormLabel>Mission Description</FormLabel>
                                 <FormControl>
-                                    <RichEditor
+                                    <RichTextEditor
                                         content={field.value || ""}
                                         onChange={field.onChange}
                                     />
