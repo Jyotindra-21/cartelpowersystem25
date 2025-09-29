@@ -22,6 +22,12 @@ import { signUpSchema } from '@/schemas/signUpSchema';
 import { useDebounce } from '@/hooks/use-debounce';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/components/hooks/use-toast';
+import { fetchWebsiteInfo } from '@/services/settings.services';
+import { getActiveSvgLogo } from '@/services/svglogo.services';
+import { IWebsiteInfo } from '@/schemas/settingsSchema';
+import { ISvgLogo } from '@/schemas/logoSchema';
+import LogoReveal from '@/components/custom/LogoReveal';
+import Image from 'next/image';
 
 export default function SignUpForm() {
   const [username, setUsername] = useState('');
@@ -29,7 +35,26 @@ export default function SignUpForm() {
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const [websiteInfo, setwebsiteInfo] = useState<IWebsiteInfo | null>(null);
+  const [svgLogo, setsvgLogo] = useState<ISvgLogo | null>(null);
+
+  const fetchLogo = async () => {
+    const [websiteInfo, svgLogo] = await Promise.all([
+      fetchWebsiteInfo(),
+      getActiveSvgLogo()
+    ]);
+    setsvgLogo(svgLogo)
+    setwebsiteInfo(websiteInfo.data || null)
+  }
+
+  useEffect(() => {
+    fetchLogo()
+  }, [])
+
   const debouncedUsername = useDebounce(username, 300);
+
+
 
   const router = useRouter();
   const { toast } = useToast();
@@ -106,8 +131,7 @@ export default function SignUpForm() {
       >
         <div className="text-center">
           <div className="flex justify-center mb-4">
-            {/* <LogoReveal /> */}
-            logo
+            <LogoSection svgLogo={svgLogo || null} websiteInfo={websiteInfo || null} />
           </div>
           <motion.h2
             className="text-2xl font-bold text-white mb-2"
@@ -279,3 +303,49 @@ export default function SignUpForm() {
     </div>
   );
 }
+
+interface ILogoSectionProps {
+  websiteInfo?: IWebsiteInfo | null;
+  svgLogo?: ISvgLogo | null;
+}
+
+const LogoSection = ({ websiteInfo, svgLogo }: ILogoSectionProps) => (
+  <motion.div
+    className="drop-shadow-[1px_1px_2px_white] rounded-tl-2xl rounded-bl-2xl"
+    initial={{ filter: '0 0' }}
+    animate={{ filter: '0 100%' }}
+    transition={{
+      duration: 2,
+      repeat: Infinity,
+      repeatType: 'reverse',
+      ease: 'easeInOut'
+    }}
+  >
+    {websiteInfo?.isSvg ? (
+      <LogoReveal
+        size={svgLogo?.svg?.size || 150}
+        initialData={{
+          viewBox: svgLogo?.svg.viewBox || "",
+          paths: JSON.parse(svgLogo?.svg.paths || "[]"),
+          animation: svgLogo?.svg.animation
+        }}
+      />
+    ) : (
+      <>
+        {websiteInfo?.logo ? (
+          <Image
+            unoptimized
+            src={websiteInfo.logo}
+            alt="logo-image"
+            width={150}
+            height={200}
+          />
+        ) : (
+          <h6 className='uppercase text-3xl'>
+            {websiteInfo?.metaTitle?.split(' ')?.[0] || ""}
+          </h6>
+        )}
+      </>
+    )}
+  </motion.div>
+);

@@ -15,15 +15,35 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, Eye, EyeOff, Fingerprint } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useToast } from '@/components/hooks/use-toast';
 import { signInSchema } from '@/schemas/signInSchema';
-// import LogoReveal from '@/components/3d/LogoRevel';
-export default function SignInForm() {
+import { fetchWebsiteInfo } from '@/services/settings.services';
+import { getActiveSvgLogo } from '@/services/svglogo.services';
+import { IWebsiteInfo } from '@/schemas/settingsSchema';
+import { ISvgLogo } from '@/schemas/logoSchema';
+import Image from 'next/image';
+import LogoReveal from '@/components/custom/LogoReveal';
 
+export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [shake, setShake] = useState(false);
+  const [websiteInfo, setwebsiteInfo] = useState<IWebsiteInfo | null>(null);
+  const [svgLogo, setsvgLogo] = useState<ISvgLogo | null>(null);
+
+  const fetchLogo = async () => {
+    const [websiteInfo, svgLogo] = await Promise.all([
+      fetchWebsiteInfo(),
+      getActiveSvgLogo()
+    ]);
+    setsvgLogo(svgLogo)
+    setwebsiteInfo(websiteInfo.data || null)
+  }
+
+  useEffect(() => {
+    fetchLogo()
+  }, [])
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -34,7 +54,6 @@ export default function SignInForm() {
   });
 
   const { toast } = useToast();
-
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
     setIsLoading(true);
     try {
@@ -43,7 +62,6 @@ export default function SignInForm() {
         identifier: data.identifier,
         password: data.password,
       });
-
       if (result?.error) {
         setShake(true);
         setTimeout(() => setShake(false), 500);
@@ -86,8 +104,7 @@ export default function SignInForm() {
       >
         <div className="text-center">
           <div className="flex justify-center mb-2">
-            {/* <LogoReveal /> */}
-            logo
+            <LogoSection svgLogo={svgLogo || null} websiteInfo={websiteInfo || null} />
           </div>
           <motion.h2
             className="text-2xl font-bold text-white mb-2"
@@ -222,3 +239,49 @@ export default function SignInForm() {
     </div>
   );
 }
+
+interface ILogoSectionProps {
+  websiteInfo?: IWebsiteInfo | null;
+  svgLogo?: ISvgLogo | null;
+}
+
+const LogoSection = ({ websiteInfo, svgLogo }: ILogoSectionProps) => (
+  <motion.div
+    className="drop-shadow-[1px_1px_2px_white] rounded-tl-2xl rounded-bl-2xl"
+    initial={{ filter: '0 0' }}
+    animate={{ filter: '0 100%' }}
+    transition={{
+      duration: 2,
+      repeat: Infinity,
+      repeatType: 'reverse',
+      ease: 'easeInOut'
+    }}
+  >
+    {websiteInfo?.isSvg ? (
+      <LogoReveal
+        size={svgLogo?.svg?.size || 150}
+        initialData={{
+          viewBox: svgLogo?.svg.viewBox || "",
+          paths: JSON.parse(svgLogo?.svg.paths || "[]"),
+          animation: svgLogo?.svg.animation
+        }}
+      />
+    ) : (
+      <>
+        {websiteInfo?.logo ? (
+          <Image
+            unoptimized
+            src={websiteInfo.logo}
+            alt="logo-image"
+            width={150}
+            height={200}
+          />
+        ) : (
+          <h6 className='uppercase text-3xl'>
+            {websiteInfo?.metaTitle?.split(' ')?.[0] || ""}
+          </h6>
+        )}
+      </>
+    )}
+  </motion.div>
+);

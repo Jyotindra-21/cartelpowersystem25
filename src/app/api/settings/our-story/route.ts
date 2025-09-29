@@ -6,10 +6,32 @@ export async function GET() {
   await dbConnect();
   try {
     const settings = await SettingsModel.findOne().select("ourStorySection");
-    return NextResponse.json(settings?.ourStorySection || {});
+
+    if (!settings || !settings?.ourStorySection) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Footer not found",
+          data: null,
+        },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json(
+      {
+        success: true,
+        data: settings?.ourStorySection,
+        error: null,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: "Failed to fetch our story section" },
+      {
+        success: false,
+        error: "Internal server error",
+        data: null,
+      },
       { status: 500 }
     );
   }
