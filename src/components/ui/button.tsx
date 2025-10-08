@@ -20,7 +20,7 @@ const buttonVariants = cva(
         ghost: "bg-transparent shadow-none hover:bg-accent hover:text-accent-foreground border-none hover:bg-transparent",
         muted: "bg-neutral-200 text-neutral-600 hover:bg-neutral-200/80",
         tertiary: "bg-blue-100 text-blue-600 border-transparent hover:bg-blue-200 shadow-none",
-        navLink: "text-white text-md font-semibold hover:text-secondary border-none shadow-none"
+        navLink: "text-black text-md font-semibold hover:text-secondary border-none shadow-none"
       },
       size: {
         default: "h-10 px-4 py-2",

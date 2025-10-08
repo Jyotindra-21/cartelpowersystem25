@@ -16,7 +16,7 @@ import { ISvgLogo } from '@/schemas/logoSchema';
 import { IWebsiteInfo } from '@/schemas/settingsSchema';
 import Image from 'next/image';
 import LogoReveal from '@/components/custom/LogoReveal';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 interface INavbarProps {
     websiteInfo?: IWebsiteInfo;
@@ -24,27 +24,38 @@ interface INavbarProps {
 }
 
 const NavbarRoutes = memo(({ websiteInfo, svgLogo }: INavbarProps) => {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const user: User | undefined = session?.user;
 
+    const [hasScrolled, setHasScrolled] = useState(false);
+    useEffect(() => {
+        const handleScroll = () => {
+            setHasScrolled(window.scrollY > 80);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    if (status === 'loading') {
+        return <div>Loading...</div>;
+    }
     return (
         <>
             <LogoSection websiteInfo={websiteInfo} svgLogo={svgLogo} />
-
-            <div className="hidden md:flex items-center text-sm gap-x-2 md:gap-x-1 ml-auto">
+            <div className="hidden md:flex items-center text-sm gap-x-2 md:gap-x-1 ml-auto text-black">
                 <NavLink href="/" text="Home" />
                 <NavLink href="/product" text="Product" />
                 <AboutDropdown />
                 <NavLink href="/contact" text="Contact" />
 
                 {session && user?.isAdmin ? (
-                    <AdminPanelLink />
+                    <AdminPanelLink hasScrolled={hasScrolled} />
                 ) : (
-                    <PhoneLink />
+                    <PhoneLink hasScrolled={hasScrolled} />
                 )}
             </div>
 
-            <AuthSection session={session} />
+            <AuthSection session={session} hasScrolled={hasScrolled} />
         </>
     );
 });
@@ -100,7 +111,7 @@ const NavLink = ({ href, text }: { href: string; text: string }) => (
 
 const AboutDropdown = () => (
     <DropdownMenu modal={false}>
-        <DropdownMenuTrigger className="text-white text-sm font-semibold hover:text-secondary focus:border-none">
+        <DropdownMenuTrigger className="text-black text-sm font-semibold hover:text-secondary focus:border-none">
             About Us
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -116,50 +127,44 @@ const AboutDropdown = () => (
     </DropdownMenu>
 );
 
-const AdminPanelLink = () => (
+const AdminPanelLink = ({ hasScrolled }: { hasScrolled: boolean }) => (
     <Link
         href="/admin/dashboard"
-        className="text-sm bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl z-100 flex py-1 px-2 items-center text-white hover:bg-white/10 transition-colors"
+        className={`text-sm bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl z-100 flex py-1 px-2 items-center text-secondary hover:bg-white/10 transition-colors ${hasScrolled ? "liquid-glass-inside" : ""} `}
     >
         Admin Panel
     </Link>
 );
 
-const PhoneLink = () => (
+const PhoneLink = ({ hasScrolled }: { hasScrolled: boolean }) => (
     <a
         href="tel:+918780074795"
-        className="text-sm bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl z-100 flex py-1 px-2 items-center text-white hover:bg-white/10 transition-colors"
+        className={`text-sm bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl z-100 flex py-1 px-2 items-center text-black hover:bg-white/10 transition-colors ${hasScrolled ? "liquid-glass" : ""}`}
     >
         <PhoneCall className="text-secondary mr-2 h-4 w-4" />
         +91 8780074795
     </a>
 );
 
-const AuthSection = ({ session }: { session: any }) => (
+const AuthSection = ({ session, hasScrolled }: { session: any, hasScrolled: boolean }) => (
     <div className="ml-auto flex lg:flex">
-        {session ? <LogoutButton /> : <LoginButton />}
+        {session ? <Link href="#"
+            type="button"
+            onClick={() => signOut()}
+            className={`cursor-pointer flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-black hover:text-secondary text-sm py-1 px-3 transition-colors duration-200 ${hasScrolled ? "liquid-glass" : ""}`}
+        >
+            <LogOut className="h-4 w-4" />
+            <span>Logout</span>
+        </Link> : <Link
+            href="/sign-in"
+            className={`cursor-pointer inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-black hover:text-secondary text-sm py-1 px-3 transition-colors duration-200 ${hasScrolled ? "liquid-glass" : ""}`}
+        >
+            <span>Login</span>
+        </Link>}
     </div>
 );
 
-const LogoutButton = () => (
-    <button
-        type="button"
-        onClick={() => signOut()}
-        className="cursor-pointer flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white hover:text-secondary text-sm py-1 px-3 transition-colors duration-200"
-    >
-        <LogOut className="h-4 w-4 text-secondary" />
-        <span>Logout</span>
-    </button>
-);
 
-const LoginButton = () => (
-    <Link
-        href="/sign-in"
-        className=" cursor-pointer inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white hover:text-secondary text-sm py-1 px-3 transition-colors duration-200"
-    >
-        <span>Login</span>
-    </Link>
-);
 
 NavbarRoutes.displayName = 'NavbarRoutes';
 export default NavbarRoutes;

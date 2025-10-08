@@ -7,21 +7,7 @@ import { IProduct } from '@/schemas/productsSchema'
 interface ProductProps {
     highlightedProducts: IProduct[] | undefined
 }
-
 const Products = ({ highlightedProducts }: ProductProps) => {
-
-
-    // if (loading) {
-    //     return (
-    //         <section className=' max-w-[1200px] px-2 py-5 m-auto '>
-    //             <Title title='Rescue Device' />
-    //             <div>
-    //                 <ProductSkeleton />
-    //             </div>
-    //         </section>
-    //     );
-    // }
-
     return (
         <section className=' max-w-[1200px] px-2 py-5 m-auto '>
             <Title title='Rescue Device' />

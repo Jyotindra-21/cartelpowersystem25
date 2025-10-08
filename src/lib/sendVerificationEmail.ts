@@ -1,6 +1,6 @@
 import VerificationEmail from "@/components/emails/VerificationEmail";
 import { resend } from "@/lib/resend";
-import { ApiResponse } from '@/types/ApiResponse';
+import { ApiResponse } from "@/types/ApiResponse";
 
 export async function sendVerificationEmail(
   email: string,
@@ -8,15 +8,26 @@ export async function sendVerificationEmail(
   verifyCode: string
 ): Promise<ApiResponse> {
   try {
-   const res =  await resend.emails.send({
-      from: 'team@speedengineering.in',
+    const res = await resend.emails.send({
+      from: "Cartel <team@cartelard.com>",
       to: email,
-      subject: 'Cartel Power System Verification Code',
+      subject: "Email Verification",
       react: VerificationEmail({ username, otp: verifyCode }),
+      replyTo: "support@cartelard.com",
     });
-    return { success: true, message: 'Verification email sent successfully.' };
+    if (res.data?.id) {
+      return {
+        success: true,
+        message: "Verification email sent successfully.",
+      };
+    } else {
+      return {
+        success: true,
+        message: `Something went Wrong! While Sending Email.`,
+      };
+    }
   } catch (emailError) {
-    console.error('Error sending verification email:', emailError);
-    return { success: false, message: 'Failed to send verification email.' };
+    console.error("Error sending verification email:", emailError);
+    return { success: false, message: "Failed to send verification email." };
   }
 }

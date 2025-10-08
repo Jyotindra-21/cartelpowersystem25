@@ -52,22 +52,22 @@ const WeWork = ({ weWorkAcross }: WeWorkProps) => {
     return (
         <div className='w-full py-12 '>
             <div className="max-w-[1200px] mx-auto px-4">
-                <Title title={`We Work Across ${weWorkAcross?.workAcross}`} />
-                <p className="text-center text-gray-600 mb-8">
-                    Serving major cities with our innovative ARD solutions
-                </p>
-                <div className="slider-container bg-white rounded-xl shadow-sm p-4 bg-gradient-to-br from-primary via-primary-dark to-primary-darker">
+                <Title title={`We Work Across`} />
+                <h6 className="text-lg text-center font-bold text-gray-900 mb-6">
+                    {weWorkAcross?.workAcross}
+                </h6>
+                <div className="slider-container bg-white rounded-xl shadow-sm p-4 ">
                     <Slider {...settings}>
                         {weWorkAcross?.workAcrossCities?.map((item, index) => (
                             <div key={index} className='px-2'>
-                                <div className="bg-white p-4 rounded-lg border border-gray-500 hover:shadow-md transition-shadow bg-white/5 backdrop-blur-sm  border-white/10">
+                                <div className=" p-4 rounded-lg border  hover:shadow-md transition-shadow bg-white/5 backdrop-blur-sm  border-white/10 liquid-glass">
                                     <div className="relative h-32 w-32 mx-auto mb-3">
                                         <Image
                                             unoptimized
                                             fill
                                             src={item.cityImage}
                                             alt={item.atl || `city-images-${index}`}
-                                            
+
                                             className="object-contain"
                                         />
                                     </div>

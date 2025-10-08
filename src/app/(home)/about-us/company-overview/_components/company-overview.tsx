@@ -13,6 +13,7 @@ import {
 import { IOurStorySection } from '@/schemas/settingsSchema';
 import { ITestimonial } from '@/schemas/testimonialSchema';
 import { fadeIn, slideUp, staggerContainer } from '@/lib/animations';
+import Title from '@/app/(home)/_components/title';
 
 interface CompanyOverviewProps {
     data: IOurStorySection | null,
@@ -116,12 +117,10 @@ const CompanyOverview = ({ data, testimonials }: CompanyOverviewProps) => {
                     variants={staggerContainer}
                     className="text-center mb-16"
                 >
-                    <motion.h2 variants={slideUp} className="text-2xl font-semibold text-blue-800 mb-4">
-                        TRUSTED BY INDUSTRY LEADERS
-                    </motion.h2>
-                    <motion.h3 variants={slideUp} className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                    <Title title='TRUSTED BY INDUSTRY LEADERS' />
+                    <h6 className="text-lg text-center font-bold text-gray-900 mb-6">
                         What Our Partners Say
-                    </motion.h3>
+                    </h6>
                 </motion.div>
 
                 <div className="max-w-4xl mx-auto">

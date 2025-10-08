@@ -42,7 +42,7 @@ const HeroPage = ({ heroSection, banners }: HeroPageProps) => {
                 )}
             </div>
             {/* Main grid container with visible lines */}
-            <div className='grid grid-cols-1 md:grid-cols-2 w-full max-w-[1200px] mx-auto relative z-10 py-12 md:py-20 gap-8 md:gap-12'>
+            <div className='grid grid-cols-1 md:grid-cols-2 w-full max-w-[1200px] mx-auto relative z-10 py-20 md:py-20 gap-8 md:gap-12'>
                 {/* Left Column with right border */}
                 <div className="relative flex m-auto">
                     <div className='flex flex-col justify-center z-10 gap-6 w-full'>
@@ -54,7 +54,7 @@ const HeroPage = ({ heroSection, banners }: HeroPageProps) => {
                         <h1 className='text-white text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight'>
                             <span className="text-secondary">{heroSection?.title?.split(" ")?.[0]}</span> {heroSection?.title?.split(" ")?.[1]}<br />
                             <span className="bg-gradient-to-r from-secondary to-white bg-clip-text text-transparent">
-                                {heroSection?.title?.split(" ")?.[2]}{heroSection?.title?.split(" ")?.[3]}
+                                {heroSection?.title?.split(" ")?.[2]}{" "}{heroSection?.title?.split(" ")?.[3]}
                             </span>
                         </h1>
 

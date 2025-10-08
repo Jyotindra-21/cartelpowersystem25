@@ -97,7 +97,7 @@ export const MobileSidebar = ({ websiteInfo, svgLogo }: IMobileSidebarProps) => 
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="md:hidden p-2.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] fixed left-4 top-4 z-50"
+                        className="md:hidden p-2.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)]  z-50"
                     >
                         <Menu className="h-5 w-5 text-secondary" />
                     </motion.button>

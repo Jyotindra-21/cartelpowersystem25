@@ -14,23 +14,13 @@ export const revalidate = 0; //
 const ProductPage = async () => {
     headers();
     const { data: products }: IApiResponse<IProduct[]> = await fetchProducts<IProduct[]>({ isActive: true, getAll: true });
-    // if (loading) {
-    //     return (
-    //         <section className=' max-w-[1200px] px-2 py-5 m-auto '>
-    //             <Title title='All Products' />
-    //             <div>
-    //                 <ProductSkeleton />
-    //             </div>
-    //         </section>
-    //     );
-    // }
     if (!products) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <div className="text-center">
                     <h2 className="text-xl font-medium mb-4">Product not found</h2>
                     {/* <p className="text-gray-600 mb-4">{data}</p> */}
-                    <Link href="/products" className="text-blue-600 hover:underline">
+                    <Link href="/product" className="text-blue-600 hover:underline">
                         Browse all products
                     </Link>
                 </div>

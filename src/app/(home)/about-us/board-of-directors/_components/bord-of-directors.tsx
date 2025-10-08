@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { fadeIn, slideUp, staggerContainer } from '@/lib/animations'
 import { ITeamMember } from '@/schemas/teamMemberSchema'
 import { IOurStorySection } from '@/schemas/settingsSchema'
+import Title from '@/app/(home)/_components/title'
 export const dynamic = 'force-dynamic';
 
 interface BoardOfDirectorsProps {
@@ -76,26 +77,12 @@ const BoardOfDirectors = ({ data, teamMembers }: BoardOfDirectorsProps) => {
                     variants={staggerContainer}
                     className="text-center mb-16"
                 >
-                    <motion.h2
-                        variants={slideUp}
-                        className="text-2xl font-semibold text-blue-700 mb-4"
-                    >
-                        EXECUTIVE TEAM
-                    </motion.h2>
-                    <motion.h3
-                        variants={slideUp}
-                        className="text-3xl md:text-4xl font-bold text-gray-900 mb-6"
-                    >
-                        Our <span className="text-blue-600">Strategic Leaders</span>
-                    </motion.h3>
-                    <motion.p
-                        variants={slideUp}
-                        className="text-gray-600 max-w-2xl mx-auto"
-                    >
+                    <Title title='EXECUTIVE TEAM' />
+                    <motion.h6 variants={slideUp} className="text-lg text-center font-bold text-gray-900 mb-6">
                         Seasoned professionals with decades of combined experience in elevator safety technology
-                    </motion.p>
+                    </motion.h6>
+                    
                 </motion.div>
-
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
@@ -149,9 +136,6 @@ const BoardOfDirectors = ({ data, teamMembers }: BoardOfDirectorsProps) => {
                         </motion.div>
                     ))}
                 </motion.div>
-
-
-
                 {/* Mission Statement */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}

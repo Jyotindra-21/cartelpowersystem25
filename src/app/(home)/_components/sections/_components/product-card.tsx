@@ -5,14 +5,20 @@ import React from 'react'
 import { formatIndianCurrency } from '@/lib/helper'
 import { IProduct } from '@/schemas/productsSchema'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 interface ProductCardProps {
     product: IProduct
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+
+    const router = useRouter()
+    const handleView = () => {
+        router.push(`/product/${product?.basicInfo.slug}`)
+    }
     return (
-        <Link href={`/product/${product?.basicInfo.slug}`} className="group relative">
+        <Link href={`/product/${product?.basicInfo.slug}`} className="group relative" prefetch={false}>
             <div className="relative z-10 h-full bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-200 hover:border-blue-500 w-[350px]">
                 {/* Sale Badge */}
                 {product?.pricing.hasDiscount ? <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white text-sm font-bold px-3 py-1 rounded-full z-20 flex items-center">
@@ -78,11 +84,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
                             }</span>
                         </div>
                         <button
+                            onClick={handleView}
                             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors duration-200"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                // Add to cart logic here
-                            }}
                         >
                             {/* <ShoppingCart className="h-4 w-4 mr-2" /> */}
                             <span>View</span>

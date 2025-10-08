@@ -47,6 +47,14 @@ const UserSchema: Schema<IUserDocument> = new Schema(
       type: Date,
       required: false,
     },
+    resetToken: {
+      type: String,
+      required: false,
+    },
+    resetTokenExpiry: {
+      type: Date,
+      required: false,
+    },
     isVerified: {
       type: Boolean,
       default: false,

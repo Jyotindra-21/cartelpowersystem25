@@ -12,16 +12,16 @@ import {
     Img,
 } from '@react-email/components';
 
-interface VerificationEmailProps {
+interface PasswordResetEmailProps {
     username: string;
-    otp: string;
+    resetLink: string;
 }
 
-export default function VerificationEmail({ username, otp }: VerificationEmailProps) {
+export default function PasswordResetEmail({ username, resetLink }: PasswordResetEmailProps) {
     return (
         <Html lang="en" dir="ltr">
             <Head>
-                <title>Verify Your Email</title>
+                <title>Reset Your Password</title>
                 <Font
                     fontFamily="Roboto"
                     fallbackFontFamily="Verdana"
@@ -33,7 +33,7 @@ export default function VerificationEmail({ username, otp }: VerificationEmailPr
                     fontStyle="normal"
                 />
             </Head>
-            <Preview>Your verification code: {otp}</Preview>
+            <Preview>Reset your password - this link will expire in 1 hour</Preview>
             
             <Container style={container}>
                 {/* Header */}
@@ -46,7 +46,7 @@ export default function VerificationEmail({ username, otp }: VerificationEmailPr
                         />
                     </Row>
                     <Row>
-                        <Heading as="h1" style={mainTitle}>Verify Your Email</Heading>
+                        <Heading as="h1" style={mainTitle}>Reset Your Password</Heading>
                     </Row>
                 </Section>
 
@@ -60,36 +60,51 @@ export default function VerificationEmail({ username, otp }: VerificationEmailPr
                     
                     <Row>
                         <Text style={message}>
-                            Please use the following verification code to complete your registration:
+                            We received a request to reset your password. Click the button below to create a new password:
                         </Text>
                     </Row>
 
-                    {/* OTP */}
-                    <Section style={otpSection}>
+                    {/* Reset Button */}
+                    <Section style={buttonSection}>
                         <Row>
-                            <Text style={otpCode}>{otp}</Text>
+                            <Button href={resetLink} style={button}>
+                                Reset Password
+                            </Button>
                         </Row>
                     </Section>
 
                     <Row>
                         <Text style={instructions}>
-                            This code will expire in 10 minutes.
+                            This link will expire in 1 hour for security reasons.
                         </Text>
                     </Row>
 
-                    {/* Button */}
                     <Row>
-                        <Button href="#" style={button}>
-                            Verify Email
-                        </Button>
+                        <Text style={warning}>
+                            If you didn't request this reset, please ignore this email. Your password will remain unchanged.
+                        </Text>
                     </Row>
+
+                    {/* Alternative link for email clients that don't support buttons */}
+                    <Section style={altLinkSection}>
+                        <Row>
+                            <Text style={altLinkText}>
+                                Or copy and paste this link in your browser:
+                            </Text>
+                        </Row>
+                        <Row>
+                            <Text style={linkUrl}>
+                                {resetLink}
+                            </Text>
+                        </Row>
+                    </Section>
                 </Section>
 
                 {/* Footer */}
                 <Section style={footerSection}>
                     <Row>
                         <Text style={footerText}>
-                            If you didn't request this, please ignore this email.
+                            This is an automated message. Please do not reply to this email.
                         </Text>
                     </Row>
                     <Row>
@@ -103,7 +118,7 @@ export default function VerificationEmail({ username, otp }: VerificationEmailPr
     );
 }
 
-// Simplified, clean styles
+// Styles matching your verification email
 const container = {
     backgroundColor: '#ffffff',
     margin: '0 auto',
@@ -145,31 +160,12 @@ const message = {
     fontSize: '14px',
     color: '#666666',
     lineHeight: '1.5',
-    marginBottom: '20px',
-};
-
-const otpSection = {
-    textAlign: 'center' as const,
-    margin: '24px 0',
-};
-
-const otpCode = {
-    fontSize: '32px',
-    fontWeight: '700',
-    color: '#2563eb',
-    letterSpacing: '4px',
-    padding: '16px',
-    backgroundColor: '#f8fafc',
-    borderRadius: '6px',
-    margin: '0 auto',
-    display: 'inline-block',
-};
-
-const instructions = {
-    fontSize: '14px',
-    color: '#666666',
-    textAlign: 'center' as const,
     marginBottom: '24px',
+};
+
+const buttonSection = {
+    textAlign: 'center' as const,
+    margin: '32px 0',
 };
 
 const button = {
@@ -181,8 +177,47 @@ const button = {
     textDecoration: 'none',
     textAlign: 'center' as const,
     display: 'block',
-    padding: '12px 24px',
+    padding: '12px 32px',
     margin: '0 auto',
+};
+
+const instructions = {
+    fontSize: '14px',
+    color: '#666666',
+    textAlign: 'center' as const,
+    marginBottom: '16px',
+};
+
+const warning = {
+    fontSize: '13px',
+    color: '#dc2626',
+    textAlign: 'center' as const,
+    lineHeight: '1.5',
+    marginBottom: '24px',
+    padding: '12px',
+    backgroundColor: '#fef2f2',
+    borderRadius: '4px',
+    border: '1px solid #fecaca',
+};
+
+const altLinkSection = {
+    padding: '16px',
+    backgroundColor: '#f8fafc',
+    borderRadius: '6px',
+    border: '1px solid #e2e8f0',
+};
+
+const altLinkText = {
+    fontSize: '13px',
+    color: '#475569',
+    marginBottom: '8px',
+};
+
+const linkUrl = {
+    fontSize: '12px',
+    color: '#2563eb',
+    wordBreak: 'break-all' as const,
+    lineHeight: '1.4',
 };
 
 const footerSection = {

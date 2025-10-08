@@ -9,6 +9,13 @@ export async function GET(req: NextRequest) {
   const cookies = req.cookies;
   const path = url.slice(req.nextUrl.origin.length);
 
+  const isValidIP =
+    ["127.0.0.1", "::1", "localhost"].includes(ip) ||
+    ip.startsWith("192.168.") ||
+    ip.startsWith("10.") ||
+    ip.startsWith("172.");
+  if (isValidIP) return NextResponse.json({ success: false });
+
   const result = await trackVisitor({
     ip,
     userAgent,
