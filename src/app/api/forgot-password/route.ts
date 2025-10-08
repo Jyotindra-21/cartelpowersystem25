@@ -24,8 +24,7 @@ export async function POST(request: Request) {
 
     // Generate reset token
     const resetToken = Math.random().toString(36).slice(2) + Date.now().toString(36);
-    const resetTokenExpiry = new Date(Date.now() + 1); // 1 hour
-// 3600000
+    const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
     // Save reset token to user
     user.resetToken = resetToken;
     user.resetTokenExpiry = resetTokenExpiry;

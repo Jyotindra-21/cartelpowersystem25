@@ -31,7 +31,7 @@ const Page = async () => {
             <div className='relative overflow-clip'>
                 <HeroPage heroSection={settings?.heroSection} banners={products?.filter((products) => products.flags?.isBanner)} />
                 <Products highlightedProducts={products?.filter((products) => products.flags?.isHighlighted)} />
-                {/* <ScrollLine /> */}
+                <ScrollLine />
                 <OurStoryPage ourStory={settings?.ourStorySection} testimonials={testimonials || []} />
                 <WeWork weWorkAcross={settings?.weWorkAcross} />
             </div>
