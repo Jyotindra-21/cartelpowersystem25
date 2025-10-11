@@ -15,6 +15,7 @@ import {
   IFooterSection,
   ISettings,
   IWebsiteInfo,
+  IPolicySection,
 } from "@/schemas/settingsSchema"; // Import your existing Zod-derived types
 
 // Convert Zod types to Mongoose schemas
@@ -96,6 +97,11 @@ const OurStorySectionSchema = new Schema<IOurStorySection & Document>({
   companyStats: { type: [CompanyStatsSchema], required: true },
 });
 
+const PolicySectionSchema = new Schema<IPolicySection & Document>({
+  privacyPolicy: { type: String },
+  termsAndConditions: { type: String },
+});
+
 const WeWorkAcrossSchema = new Schema<IWeWorkAcrossSection & Document>({
   workAcross: { type: String, required: true },
   isWorkAcrossView: { type: Boolean, default: true },
@@ -118,6 +124,7 @@ const SettingsSchema = new Schema<ISettings & Document>(
     ourStorySection: { type: OurStorySectionSchema, required: true },
     weWorkAcross: { type: WeWorkAcrossSchema, required: true },
     footerSection: { type: FooterSectionSchema, required: true },
+    policySection: { type: PolicySectionSchema, required: true },
   },
   { timestamps: true }
 );

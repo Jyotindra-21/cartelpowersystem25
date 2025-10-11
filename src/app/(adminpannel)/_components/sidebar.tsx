@@ -12,6 +12,7 @@ import {
   CalendarSearch,
   ShieldUser,
   Star,
+  Database,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -99,6 +100,11 @@ export function AdminSidebar({ closeMobileMenu }: SidebarProps) {
       name: 'Settings',
       href: '/admin/settings',
       icon: Settings,
+    },
+    {
+      name: 'Storage Bucket',
+      href: '/admin/bucket',
+      icon: Database,
     },
   ]
 

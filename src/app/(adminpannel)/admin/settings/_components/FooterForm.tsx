@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/hooks/use-toast";
 import { Loader, Plus, Trash } from "lucide-react";
-import ImageUpload from "@/components/custom/ImageUpload";
+import ImageUploadCommon from "@/components/custom/ImageUploadCommon";
 import { useState } from "react";
 import { updateFooterSection } from "@/services/settings.services";
 import { useFooterSectionFieldArrays } from "./useSettingsFieldArrays";
@@ -240,10 +240,12 @@ export function FooterForm({ initialData, onSuccess }: FooterFormProps) {
                                     render={({ field }) => (
                                         <FormItem id={`form-field-technology.${index}.fileUrl`} className="mb-6">
                                             <FormControl>
-                                                <ImageUpload
-                                                    name={`technology.${index}.fileUrl`}
+                                                <ImageUploadCommon
                                                     value={field.value}
                                                     onChange={field.onChange}
+                                                    uploadService="minio"
+                                                    folder="technology"
+                                                    name={`technology.${index}.fileUrl`}
                                                 />
                                             </FormControl>
                                             <FormMessage />

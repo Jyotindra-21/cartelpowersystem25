@@ -14,7 +14,8 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { ITeamMember, teamMemberSchema } from '@/schemas/teamMemberSchema'
-import ImageUpload from "@/components/custom/ImageUpload";
+// import ImageUpload from "@/components/custom/ImageUpload";
+import ImageUploadCommon from "@/components/custom/ImageUploadCommon";
 import { createTeamMember, updateTeamMember } from '@/services/teamMemberService'
 
 type TeamMemberFormValues = z.infer<typeof teamMemberSchema>
@@ -97,16 +98,67 @@ export function TeamMemberDialog({ teamMember, children }: TeamMemberDialogProps
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className=" flex flex-col flex-1 min-h-0">
                         <div className='flex-1 overflow-hidden hover:overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 transition-all space-y-4'>
-                       
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="fullName"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Full Name</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="John Doe" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="designation"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Designation</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="CEO, Company Inc." {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
                             <FormField
                                 control={form.control}
-                                name="fullName"
+                                name="image"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Full Name</FormLabel>
+                                        <FormLabel>Image</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="John Doe" {...field} />
+                                            <ImageUploadCommon
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                uploadService="minio"
+                                                folder="team-members"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Description</FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                placeholder="Share your experience (50-150 characters)"
+                                                className="min-h-[100px]"
+                                                {...field}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -114,87 +166,38 @@ export function TeamMemberDialog({ teamMember, children }: TeamMemberDialogProps
                             />
                             <FormField
                                 control={form.control}
-                                name="designation"
+                                name="expertise"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Designation</FormLabel>
+                                        <FormLabel>Expertise</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="CEO, Company Inc." {...field} />
+                                            <Textarea
+                                                placeholder="Share your expertise, separated by commas"
+                                                className="min-h-[100px]"
+                                                {...field}
+                                            />
                                         </FormControl>
                                         <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="status"
+                                render={({ field }) => (
+                                    <FormItem className="flex items-center space-x-2">
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                                id="status-toggle"
+                                            />
+                                        </FormControl>
+                                        <Label htmlFor="status-toggle">Published</Label>
                                     </FormItem>
                                 )}
                             />
                         </div>
-
-                        <FormField
-                            control={form.control}
-                            name="image"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Image</FormLabel>
-                                    <FormControl>
-                                        <ImageUpload
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Description</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            placeholder="Share your experience (50-150 characters)"
-                                            className="min-h-[100px]"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="expertise"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Expertise</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            placeholder="Share your expertise, separated by commas"
-                                            className="min-h-[100px]"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="status"
-                            render={({ field }) => (
-                                <FormItem className="flex items-center space-x-2">
-                                    <FormControl>
-                                        <Switch
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                            id="status-toggle"
-                                        />
-                                    </FormControl>
-                                    <Label htmlFor="status-toggle">Published</Label>
-                                </FormItem>
-                            )}
-                        />
-                         </div>
                         <div className="flex justify-end space-x-2 pt-4">
                             <Button
                                 type="button"

@@ -9,7 +9,7 @@ import { Loader2, Pencil, Check, X, ImageIcon, User2, VenusAndMars, Mail, Phone,
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/hooks/use-toast";
 import { IUserFormValue, userFormSchema } from "@/schemas/userSchema";
-import ImageUpload from "@/components/custom/ImageUpload";
+import ImageUploadCommon from "@/components/custom/ImageUploadCommon";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchUser, updateUserProfile } from "@/services/user.services";
 import { signOut, useSession } from "next-auth/react";
@@ -145,12 +145,14 @@ export default function ProfilePage() {
                                     </div>
                                 )}
                                 <div className="absolute inset-0 cursor-pointer w-full h-full z-10">
-                                    <ImageUpload
+                                    <ImageUploadCommon
                                         value={field.value}
                                         onChange={(url) => {
                                             field.onChange(url);
                                             form.setValue("banner", url);
                                         }}
+                                        uploadService="minio"
+                                        folder="users/banners"
                                         name="banner"
                                     />
                                 </div>
@@ -193,9 +195,11 @@ export default function ProfilePage() {
                                                 <ImageIcon className="h-5 w-5 text-gray-800" />
                                             </div>
                                             <div className="absolute inset-0 h-36 w-36 rounded-full z-20 cursor-pointer">
-                                                <ImageUpload
+                                                <ImageUploadCommon
                                                     value={field.value}
                                                     onChange={(url) => form.setValue("image", url)}
+                                                    uploadService="minio"
+                                                    folder="users/profiles"
                                                     name="image"
                                                 />
                                             </div>

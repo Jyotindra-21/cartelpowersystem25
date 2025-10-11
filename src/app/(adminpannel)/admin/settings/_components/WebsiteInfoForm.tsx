@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/hooks/use-toast";
-import ImageUpload from "@/components/custom/ImageUpload";
+import ImageUploadCommon from "@/components/custom/ImageUploadCommon";
 import { Loader, Pen, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { updateWebsiteInfo } from "@/services/settings.services";
@@ -145,9 +145,12 @@ export function WebsiteInfoForm({ initialData, svgLogo, onSuccess, isLoading }: 
                         <FormItem>
                             <FormLabel>Logo</FormLabel>
                             <FormControl>
-                                <ImageUpload
+                                <ImageUploadCommon
                                     value={field.value}
                                     onChange={field.onChange}
+                                    uploadService="minio"
+                                    folder="logos"
+                                    name={`logo`}
                                 />
                             </FormControl>
                             <FormMessage />

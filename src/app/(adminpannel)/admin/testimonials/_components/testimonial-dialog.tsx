@@ -14,7 +14,7 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { ITestimonial, testimonialSchema } from '@/schemas/testimonialSchema'
-import ImageUpload from "@/components/custom/ImageUpload";
+import ImageUploadCommon from "@/components/custom/ImageUploadCommon";
 import { createTestimonial, updateTestimonial } from '@/services/testimonialService'
 
 type TestimonialFormValues = z.infer<typeof testimonialSchema>
@@ -131,9 +131,11 @@ export function TestimonialDialog({ testimonial, children }: TestimonialDialogPr
                                 <FormItem>
                                     <FormLabel>Image</FormLabel>
                                     <FormControl>
-                                        <ImageUpload
+                                        <ImageUploadCommon
                                             value={field.value}
                                             onChange={field.onChange}
+                                            uploadService="minio"
+                                            folder="testimonials"
                                         />
                                     </FormControl>
                                     <FormMessage />

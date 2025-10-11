@@ -3,6 +3,7 @@ import {
   IFooterSection,
   IHeroSection,
   IOurStorySection,
+  IPolicySection,
   ISettings,
   ISettingsCreateInput,
   ISettingsUpdateInput,
@@ -16,7 +17,8 @@ export type SettingsSection =
   | "hero-section"
   | "our-story"
   | "we-work-across"
-  | "footer";
+  | "footer"
+  | "policy";
 
 interface FetchSettingsParams {
   filters?: {
@@ -136,6 +138,17 @@ export async function updateOurStorySection(
   data: IOurStorySection
 ): Promise<IApiResponse<IOurStorySection>> {
   return updateSectionSettings("our-story", data);
+}
+export async function fetchPolicySection(): Promise<
+  IApiResponse<IPolicySection>
+> {
+  return fetchSectionSettings("policy");
+}
+
+export async function updatePolicySection(
+  data: IPolicySection
+): Promise<IApiResponse<IPolicySection>> {
+  return updateSectionSettings("policy", data);
 }
 
 export async function fetchWeWorkAcross(): Promise<

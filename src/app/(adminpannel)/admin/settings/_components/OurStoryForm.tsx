@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/hooks/use-toast";
 import { Loader, Plus, Trash } from "lucide-react";
-import ImageUpload from "@/components/custom/ImageUpload";
+import ImageUploadCommon from "@/components/custom/ImageUploadCommon";
 import RichEditor from "@/components/custom/RichEditor";
 import { useState } from "react";
 import { updateOurStorySection } from "@/services/settings.services";
@@ -99,7 +99,6 @@ export function OurStoryForm({ initialData, onSuccess }: OurStoryFormProps) {
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="image"
@@ -107,16 +106,18 @@ export function OurStoryForm({ initialData, onSuccess }: OurStoryFormProps) {
                         <FormItem>
                             <FormLabel>Image</FormLabel>
                             <FormControl>
-                                <ImageUpload
+                                <ImageUploadCommon
                                     value={field.value}
                                     onChange={field.onChange}
+                                    uploadService="minio"
+                                    folder="our-story"
+                                    name={`image`}
                                 />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="description"
@@ -133,7 +134,6 @@ export function OurStoryForm({ initialData, onSuccess }: OurStoryFormProps) {
                         </FormItem>
                     )}
                 />
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                         control={form.control}
@@ -148,7 +148,6 @@ export function OurStoryForm({ initialData, onSuccess }: OurStoryFormProps) {
                             </FormItem>
                         )}
                     />
-
                     <FormField
                         control={form.control}
                         name="position"
@@ -163,7 +162,6 @@ export function OurStoryForm({ initialData, onSuccess }: OurStoryFormProps) {
                         )}
                     />
                 </div>
-
                 <FormField
                     control={form.control}
                     name="quote"

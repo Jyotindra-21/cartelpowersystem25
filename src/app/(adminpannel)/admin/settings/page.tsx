@@ -25,6 +25,7 @@ import { Book, Globe, ImageUp, Layout, Map, Settings } from "lucide-react";
 import { getActiveSvgLogo } from "@/services/svglogo.services";
 import { useToast } from "@/components/hooks/use-toast";
 import { ISvgLogo } from "@/schemas/logoSchema";
+import { PolicyForm } from "./_components/PolicyForm";
 
 export default function SettingsPage() {
     const { toast } = useToast();
@@ -52,17 +53,17 @@ export default function SettingsPage() {
             try {
                 setIsLoading(true);
                 setIsLogoLoading(true);
-                
+
                 // Fetch both settings and logo in parallel
                 const [settingsData, logoData] = await Promise.all([
                     fetchSettings(),
                     getActiveSvgLogo()
                 ]);
-                
+
                 if (settingsData) {
                     setSettings(settingsData?.data);
                 }
-                
+
                 if (logoData) {
                     setSvgLogo(logoData);
                 }
@@ -78,7 +79,7 @@ export default function SettingsPage() {
                 setIsLogoLoading(false);
             }
         }
-        
+
         loadAllData();
     }, [refreshKey, toast]);
 
@@ -108,7 +109,7 @@ export default function SettingsPage() {
                 <HeroSectionForm
                     initialData={settings?.heroSection}
                     onSuccess={handleSuccess}
-                    // isLoading={isLoading}
+                // isLoading={isLoading}
                 />
             )
         },
@@ -120,7 +121,7 @@ export default function SettingsPage() {
                 <OurStoryForm
                     initialData={settings?.ourStorySection}
                     onSuccess={handleSuccess}
-                    // isLoading={isLoading}
+                // isLoading={isLoading}
                 />
             )
         },
@@ -132,7 +133,7 @@ export default function SettingsPage() {
                 <WeWorkAcrossForm
                     initialData={settings?.weWorkAcross}
                     onSuccess={handleSuccess}
-                    // isLoading={isLoading}
+                // isLoading={isLoading}
                 />
             )
         },
@@ -144,7 +145,19 @@ export default function SettingsPage() {
                 <FooterForm
                     initialData={settings?.footerSection}
                     onSuccess={handleSuccess}
-                    // isLoading={isLoading}
+                // isLoading={isLoading}
+                />
+            )
+        },
+        {
+            value: "policy",
+            label: "Policy",
+            icon: <Layout className="w-5 h-5" />,
+            component: (
+                <PolicyForm
+                    initialData={settings?.policySection}
+                    onSuccess={handleSuccess}
+                // isLoading={isLoading}
                 />
             )
         }

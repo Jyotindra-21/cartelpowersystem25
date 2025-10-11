@@ -45,6 +45,10 @@ export const OurStorySectionSchema = z.object({
   missionDescription: z.string().optional(),
   companyStats: z.array(CompanyStatsScheme),
 });
+export const PolicySectionSchema = z.object({
+  privacyPolicy: z.string().optional(),
+  termsAndConditions: z.string().optional(),
+});
 
 export const CitySchema = z.object({
   cityName: z.string().min(1, "City Name is required"),
@@ -97,6 +101,7 @@ export const SettingsSchema = z.object({
   ourStorySection: OurStorySectionSchema,
   weWorkAcross: WeWorkAcross,
   footerSection: FooterSchema,
+  policySection: PolicySectionSchema,
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 });
@@ -125,6 +130,7 @@ export type IWebsiteInfo = z.infer<typeof WebsiteSchema>;
 export type IHeroSection = z.infer<typeof HeroSectionScheme>;
 export type ICompanyStats = z.infer<typeof CompanyStatsScheme>;
 export type IOurStorySection = z.infer<typeof OurStorySectionSchema>;
+export type IPolicySection = z.infer<typeof PolicySectionSchema>;
 export type ICity = z.infer<typeof CitySchema>;
 export type IWeWorkAcrossSection = z.infer<typeof WeWorkAcross>;
 export type ISocialMedia = z.infer<typeof SocialMediaSchema>;

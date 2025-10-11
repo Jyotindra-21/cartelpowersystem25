@@ -15,7 +15,7 @@ import { IProduct, IProductMedia, ProductMediaSchema } from "@/schemas/productsS
 import { z } from "zod";
 import { useToast } from "@/components/hooks/use-toast";
 import { updateProductSection } from "@/services/product.services";
-import ImageUpload from "@/components/custom/ImageUpload";
+import ImageUploadCommon from "@/components/custom/ImageUploadCommon";
 import { useState } from "react";
 import { ImagePlus, Loader, Trash } from "lucide-react";
 import { ConfirmationDialog } from "@/components/dialogs/ConfirmationDialog";
@@ -116,10 +116,12 @@ export function MediaForm({
                             <FormItem id="form-field-mainImage" className="mb-6">
                                 <FormLabel>Main Image</FormLabel>
                                 <FormControl>
-                                    <ImageUpload
-                                        name="mainImage"
+                                    <ImageUploadCommon
                                         value={field.value}
                                         onChange={field.onChange}
+                                        uploadService="minio"
+                                        folder="products"
+                                        name="mainImage"
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -140,14 +142,16 @@ export function MediaForm({
                                                 <div key={index} className="space-y-3  bg-slate-50 p-3 rounded-lg border  border-gray-200 " id={`form-field-images[${index}].url`}>
                                                     {/* Image Upload */}
                                                     <div className="w-full">
-                                                        <ImageUpload
-                                                            name={`additional-${index}`}
+                                                        <ImageUploadCommon
                                                             value={image.url}
                                                             onChange={(url: string) => {
                                                                 const newImages = [...field.value];
                                                                 newImages[index] = { ...newImages[index], url };
                                                                 field.onChange(newImages);
                                                             }}
+                                                            uploadService="minio"
+                                                            folder="products"
+                                                            name={`additional-${index}`}
                                                         />
                                                     </div>
 
@@ -181,7 +185,6 @@ export function MediaForm({
                                                     </div>
                                                 </div>
                                             ))}
-
                                             {/* Add Image Button */}
                                             <Button
                                                 type="button"

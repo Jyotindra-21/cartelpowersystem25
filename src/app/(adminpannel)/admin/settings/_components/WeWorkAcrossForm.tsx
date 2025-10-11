@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/hooks/use-toast";
 import { Loader, Plus, Trash } from "lucide-react";
-import ImageUpload from "@/components/custom/ImageUpload";
+import ImageUploadCommon from "@/components/custom/ImageUploadCommon";
 import { useState } from "react";
 import { updateWeWorkAcross } from "@/services/settings.services";
 import { IWeWorkAcrossSection, WeWorkAcross } from "@/schemas/settingsSchema";
@@ -150,10 +150,12 @@ export function WeWorkAcrossForm({ initialData, onSuccess }: WeWorkAcrossFormPro
                                             <FormItem id={`form-field-weWorkAcross.workAcrossCities.${index}.cityImage`} className="mb-6">
 
                                                 <FormControl>
-                                                    <ImageUpload
+                                                    <ImageUploadCommon
                                                         name={`workAcrossCities.${index}.cityImage`}
                                                         value={field.value}
                                                         onChange={field.onChange}
+                                                        uploadService="minio"
+                                                        folder="cities"
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
