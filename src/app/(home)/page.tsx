@@ -17,20 +17,20 @@ const Page = async () => {
 
     const [
         { data: settings },
-        // { data: bannerProducts },
-        { data: products },
+        { data: bannerProducts },
+        { data: highlightedProducts },
         { data: testimonials }
     ] = await Promise.all([
         fetchSettings(),
-        fetchProducts<IProduct[]>({ isHighlighted: true, isBanner: true, isActive: true, getAll: true }),
-        // fetchProducts<IProduct[]>({ isHighlighted: true, isActive: true, getAll: true }),
+        fetchProducts<IProduct[]>({ isBanner: true, isActive: true, getAll: true }),
+        fetchProducts<IProduct[]>({ isHighlighted: true, isActive: true, getAll: true }),
         fetchTestimonials<ITestimonial[]>({ getAll: true, status: true })
     ]);
     return (
         <>
             <div className='relative overflow-clip'>
-                <HeroPage heroSection={settings?.heroSection} banners={products?.filter((products) => products.flags?.isBanner)} />
-                <Products highlightedProducts={products?.filter((products) => products.flags?.isHighlighted)} />
+                <HeroPage heroSection={settings?.heroSection} banners={bannerProducts} />
+                <Products highlightedProducts={highlightedProducts} />
                 <ScrollLine />
                 <OurStoryPage ourStory={settings?.ourStorySection} testimonials={testimonials || []} />
                 <WeWork weWorkAcross={settings?.weWorkAcross} />
