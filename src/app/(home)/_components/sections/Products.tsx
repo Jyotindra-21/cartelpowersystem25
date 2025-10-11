@@ -9,14 +9,18 @@ interface ProductProps {
 }
 const Products = ({ highlightedProducts }: ProductProps) => {
     return (
-        <section className=' max-w-[1200px] px-2 py-5 m-auto '>
-            <Title title='Rescue Device' />
-            <div className="relative h-full w-full bg-blue-0 grid md:grid-cols-2 lg:grid-cols-3  justify-items-center gap-y-5">
-                {highlightedProducts && highlightedProducts?.map((product: IProduct, index: number) => (
-                    <ProductCard key={index} product={product} />
-                ))}
-            </div>
-        </section>
+        <>
+            {highlightedProducts && highlightedProducts?.length > 0 && (
+                <section className=' max-w-[1200px] px-2 py-5 m-auto '>
+                    <Title title='Rescue Device' />
+                    <div className="relative h-full w-full bg-blue-0 grid md:grid-cols-2 lg:grid-cols-3  justify-items-center gap-y-5">
+                        {highlightedProducts && highlightedProducts?.map((product: IProduct, index: number) => (
+                            <ProductCard key={index} product={product} />
+                        ))}
+                    </div>
+                </section>
+            )}
+        </>
     )
 }
 

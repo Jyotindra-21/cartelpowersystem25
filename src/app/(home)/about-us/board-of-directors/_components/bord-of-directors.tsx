@@ -70,72 +70,77 @@ const BoardOfDirectors = ({ data, teamMembers }: BoardOfDirectorsProps) => {
             </motion.section>
             {/* Executive Team Section */}
             <section className="max-w-7xl mx-auto px-4 py-20">
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={staggerContainer}
-                    className="text-center mb-16"
-                >
-                    <Title title='EXECUTIVE TEAM' />
-                    <motion.h6 variants={slideUp} className="text-lg text-center font-bold text-gray-900 mb-6">
-                        Seasoned professionals with decades of combined experience in elevator safety technology
-                    </motion.h6>
-                    
-                </motion.div>
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={staggerContainer}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20"
-                >
-                    {teamMembers && teamMembers?.map((director, index) => (
+
+                {teamMembers && teamMembers?.length > 0 && (
+                    <>
                         <motion.div
-                            key={index}
-                            variants={slideUp}
-                            whileHover={{ y: -10 }}
-                            className="group"
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={staggerContainer}
+                            className="text-center mb-16"
                         >
-                            <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-full transition-all duration-300 group-hover:shadow-2xl">
-                                <div className="relative h-80 overflow-hidden">
-                                    <Image
-                                        unoptimized
-                                        src={director.image}
-                                        alt={director.fullName}
-                                        fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                                    <div className="absolute bottom-0 left-0 p-6">
-                                        <h3 className="text-2xl font-bold text-white">{director.fullName}</h3>
-                                        <p className="text-blue-300 font-medium">{director.designation}</p>
-                                    </div>
-                                </div>
-                                <div className="p-6">
-                                    <p className="text-gray-600 mb-6">{director.description}</p>
-                                    <div className="border-t border-gray-100 pt-4">
-                                        <h4 className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
-                                            <Briefcase className="h-4 w-4 mr-2" />
-                                            AREAS OF EXPERTISE
-                                        </h4>
-                                        <div className="flex flex-wrap gap-2">
-                                            {director.expertise?.split(",")?.map((item, i) => (
-                                                <span
-                                                    key={i}
-                                                    className="bg-blue-50 text-blue-600 text-xs px-3 py-1.5 rounded-full flex items-center"
-                                                >
-                                                    <Bolt className="h-3 w-3 mr-1" />
-                                                    {item}
-                                                </span>
-                                            ))}
+                            <Title title='EXECUTIVE TEAM' />
+                            <motion.h6 variants={slideUp} className="text-lg text-center font-bold text-gray-900 mb-6">
+                                Seasoned professionals with decades of combined experience in elevator safety technology
+                            </motion.h6>
+
+                        </motion.div>
+                        <motion.div
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            variants={staggerContainer}
+                            className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20"
+                        >
+                            {teamMembers && teamMembers?.map((director, index) => (
+                                <motion.div
+                                    key={index}
+                                    variants={slideUp}
+                                    whileHover={{ y: -10 }}
+                                    className="group"
+                                >
+                                    <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-full transition-all duration-300 group-hover:shadow-2xl">
+                                        <div className="relative h-80 overflow-hidden">
+                                            <Image
+                                                unoptimized
+                                                src={director.image}
+                                                alt={director.fullName}
+                                                fill
+                                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                            <div className="absolute bottom-0 left-0 p-6">
+                                                <h3 className="text-2xl font-bold text-white">{director.fullName}</h3>
+                                                <p className="text-blue-300 font-medium">{director.designation}</p>
+                                            </div>
+                                        </div>
+                                        <div className="p-6">
+                                            <p className="text-gray-600 mb-6">{director.description}</p>
+                                            <div className="border-t border-gray-100 pt-4">
+                                                <h4 className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
+                                                    <Briefcase className="h-4 w-4 mr-2" />
+                                                    AREAS OF EXPERTISE
+                                                </h4>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {director.expertise?.split(",")?.map((item, i) => (
+                                                        <span
+                                                            key={i}
+                                                            className="bg-blue-50 text-blue-600 text-xs px-3 py-1.5 rounded-full flex items-center"
+                                                        >
+                                                            <Bolt className="h-3 w-3 mr-1" />
+                                                            {item}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </motion.div>
+                            ))}
                         </motion.div>
-                    ))}
-                </motion.div>
+                    </>
+                )}
                 {/* Mission Statement */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}

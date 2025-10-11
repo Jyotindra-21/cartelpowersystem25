@@ -109,51 +109,54 @@ const CompanyOverview = ({ data, testimonials }: CompanyOverviewProps) => {
             </div>
 
 
-            <section className="py-20 container mx-auto px-6">
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={staggerContainer}
-                    className="text-center mb-16"
-                >
-                    <Title title='TRUSTED BY INDUSTRY LEADERS' />
-                    <h6 className="text-lg text-center font-bold text-gray-900 mb-6">
-                        What Our Partners Say
-                    </h6>
-                </motion.div>
+            {testimonials && testimonials?.length > 0 && (
 
-                <div className="max-w-4xl mx-auto">
-                    <Carousel className="w-full">
-                        <CarouselContent>
-                            {testimonials?.map((testimonial, index) => (
-                                <CarouselItem key={index} className="md:basis-1/2">
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        whileInView={{ opacity: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.5 }}
-                                        className={`bg-white p-8 rounded-xl shadow-md border-t-4 border-orange-500 h-full`}
-                                    >
-                                        <div className="text-gray-600 mb-6 text-lg leading-relaxed">{testimonial.description}</div>
-                                        <div className="flex items-center">
-                                            <div className="bg-gray-200 w-12 h-12 rounded-full mr-4 overflow-hidden">
-                                                <img src={testimonial.image} alt="Testimonial Image" />
+                <section className="py-20 container mx-auto px-6">
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={staggerContainer}
+                        className="text-center mb-16"
+                    >
+                        <Title title='TRUSTED BY INDUSTRY LEADERS' />
+                        <h6 className="text-lg text-center font-bold text-gray-900 mb-6">
+                            What Our Partners Say
+                        </h6>
+                    </motion.div>
+
+                    <div className="max-w-4xl mx-auto">
+                        <Carousel className="w-full">
+                            <CarouselContent>
+                                {testimonials?.map((testimonial, index) => (
+                                    <CarouselItem key={index} className="md:basis-1/2">
+                                        <motion.div
+                                            initial={{ opacity: 0 }}
+                                            whileInView={{ opacity: 1 }}
+                                            viewport={{ once: true }}
+                                            transition={{ duration: 0.5 }}
+                                            className={`bg-white p-8 rounded-xl shadow-md border-t-4 border-orange-500 h-full`}
+                                        >
+                                            <div className="text-gray-600 mb-6 text-lg leading-relaxed">{testimonial.description}</div>
+                                            <div className="flex items-center">
+                                                <div className="bg-gray-200 w-12 h-12 rounded-full mr-4 overflow-hidden">
+                                                    <img src={testimonial.image} alt="Testimonial Image" />
+                                                </div>
+                                                <div>
+                                                    <div className="font-bold text-gray-900">{testimonial.fullName}</div>
+                                                    <div className="text-gray-500 text-sm">{testimonial.designation}</div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <div className="font-bold text-gray-900">{testimonial.fullName}</div>
-                                                <div className="text-gray-500 text-sm">{testimonial.designation}</div>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                </CarouselItem>
-                            ))}
-                        </CarouselContent>
-                        <CarouselPrevious className="hidden md:flex" />
-                        <CarouselNext className="hidden md:flex" />
-                    </Carousel>
-                </div>
-            </section>
+                                        </motion.div>
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                            <CarouselPrevious className="hidden md:flex" />
+                            <CarouselNext className="hidden md:flex" />
+                        </Carousel>
+                    </div>
+                </section>
+            )}
 
         </div>
     );
