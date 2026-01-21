@@ -1,8 +1,8 @@
 import { ITestimonial } from "@/schemas/testimonialSchema";
-import mongoose, { Document, Model } from "mongoose";
+import mongoose, {  Model } from "mongoose";
 
 // Interface for Mongoose document
-export interface ITestimonialDocument extends ITestimonial, Document {
+export interface ITestimonialDocument extends ITestimonial {
   _id: string;
   createdAt: Date;
   updatedAt: Date;

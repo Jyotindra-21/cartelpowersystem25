@@ -1,8 +1,8 @@
 import { ITeamMember } from "@/schemas/teamMemberSchema";
-import mongoose, { Document, Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 
 // Interface for Mongoose document
-export interface ITeamMemberDocument extends ITeamMember, Document {
+export interface ITeamMemberDocument extends ITeamMember {
   _id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -51,7 +51,7 @@ const teamMemberSchema = new mongoose.Schema<ITeamMemberDocument>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
 // Create the model
