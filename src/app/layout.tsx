@@ -9,6 +9,7 @@ import AuthProvider from "@/components/providers/AuthProvider";
 import ImagekitProvider from "@/components/providers/ImagekitProvider";
 import { TrackingScript } from "@/components/custom/TrackingScript";
 import { QueryProvider } from "@/components/providers/QueryProvider";
+import { SocketProvider } from "@/lib/socket-context";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -30,17 +31,19 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <AuthProvider>
         <QueryProvider>
-
           <body
             suppressHydrationWarning
             className={`${inter.variable}`}
           >
-            <TrackingScript />
-            <Toaster />
-            <NextTopLoader color="#fad000" showSpinner={false} />
-            <ImagekitProvider>
-              {children}
-            </ImagekitProvider>
+            <SocketProvider>
+              <TrackingScript />
+              <Toaster />
+              <NextTopLoader color="#fad000" showSpinner={false} />
+              <ImagekitProvider>
+                {children}
+                
+              </ImagekitProvider>
+            </SocketProvider>
           </body>
         </QueryProvider>
       </AuthProvider>

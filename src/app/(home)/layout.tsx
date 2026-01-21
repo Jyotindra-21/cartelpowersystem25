@@ -2,6 +2,7 @@ import { fetchWebsiteInfo } from "@/services/settings.services";
 import Footer from "./_components/footer";
 import { ScrollHeader } from "./_components/scroll-header";
 import { getActiveSvgLogo } from "@/services/svglogo.services";
+// import ChatWidget from "@/components/custom/ChatWidget";
 
 export default async function HomeLayout({
     children,
@@ -30,6 +31,7 @@ export default async function HomeLayout({
             <main className="flex-1 pt-[60px]">
                 <div className="min-h-[calc(100vh-80px)]">
                     {children}
+                    {/* <ChatWidget /> */}
                 </div>
             </main>
             <Footer />
